@@ -31,7 +31,6 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->s_vote_buttons($s_view);
         $this->s_vote_count($s_view);
         $this->vote_clear();
-
         $this->output('</div>');
     }
 
@@ -59,30 +58,42 @@ class qa_html_theme_layer extends qa_html_theme_base {
     function s_view_meta($s_view) {
         $this->output('<span class="qa-q-view-avatar-meta">');
         $this->output('<span class="qa-q-view-meta">');
-        $this->s_view_meta_content($s_view);
-        $this->output('</span>');
-        $this->output('</span>');
-    }
-
-    function s_view_meta_content($s_view) {
-        $this->output('created ');
-        $this->output('2 days ago ');
-        $this->output('by martin ');
+        $this->s_view_meta_content($s_view, 'qa-q-view');
         $this->s_view_meta_version($s_view);
+        $this->output('</span>');
+        $this->output('</span>');
     }
 
-    function s_view_meta_version($s_view) { // dočasné
-        $this->output(' version: <select>
-  <option value="volvo">1.0</option>
-  <option value="saab">2.0</option>
-  <option value="mercedes">3.0</option>
-  <option value="audi">4.0</option>
-</select>');
+    function s_view_meta_content($s_view, $class) {
+        $this->output('<span class="' . $class . '-what">' . $s_view['what'] . '</span>');
+        $this->output('<span class="' . $class . '-when">' . $s_view['when'] . '</span>');
+        $this->output('<span class="' . $class . '-who">' . $s_view['who'] . '</span>');
+        if (!empty($s_view['what_2'])) {
+            $this->output('<br/>');
+            $this->output('<span class="' . $class . '-what">' . $s_view['what_2'] . '</span>');
+            $this->output('<span class="' . $class . '-when">' . $s_view['when_2'] . '</span>');
+            $this->output('<span class="' . $class . '-who">' . $s_view['who_2'] . '</span>');
+        }
+    }
+
+    function s_view_meta_version($s_view) {
+        if (isset($s_view['versions'])) {
+            $this->output('<span>');
+            $this->output('<select>');
+            foreach ($s_view['versions'] as $version) {
+                $this->output('<option value = ' . $version . '>' . $s_view['version_label'] . ' ' . $version . '</option>');
+            }
+
+            $this->output('</select>');
+            $this->output('</span>');
+        }
     }
 
     function s_view_content($s_view) {
         $this->output('<div class="qa-q-view-content">');
+        $this->output('<div class="entry-content">');
         $this->output($s_view['desc']);
+        $this->output('</div>');
         $this->output('</div>');
     }
 

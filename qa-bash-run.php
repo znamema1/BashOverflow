@@ -28,15 +28,19 @@ class qa_bash_run_page {
             require_once QA_PLUGIN_DIR . 'bash-overflow/test-debug.php';
             print_array_recursive($_FILES['filein'], '');
             echo "výpis souboru: <br>";
-            $fp = fopen($_FILES['filein']['tmp_name'],'rb'); // toto ukazuje problém s kódováním...
-            while(($line = fgets($fp)) !== false){
+            $fp = fopen($_FILES['filein']['tmp_name'], 'rb'); // toto ukazuje problém s kódováním...
+            while (($line = fgets($fp)) !== false) {
                 echo "$line<br>";
             }
         }
-
+        $qa_content['s_view']['what'] = 'created';
+        $qa_content['s_view']['when'] = '2 minutes ago';
+        $qa_content['s_view']['who'] = 'by martin';
         $qa_content['s_view']['score'] = 99;
         $qa_content['s_view']['desc'] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque a scelerisque nisl. Sed gravida ligula odio, et accumsan velit convallis sit amet. Integer sed nulla sed leo bibendum sollicitudin. Nulla eu congue mauris. Suspendisse potenti. Suspendisse vestibulum fermentum libero id vehicula. Integer ullamcorper mi velit, ac pulvinar magna condimentum a. Etiam malesuada magna a enim mollis egestas. Nulla id sem commodo, consectetur ante in, consequat nisi. Nunc nisi ante, tempor a urna non, finibus eleifend metus. Morbi lorem augue, rutrum sit amet varius lacinia, varius vel nisi. Praesent malesuada sapien id odio gravida, sed ultrices nulla dapibus.";
         $qa_content['s_view']['tags'] = array('test', 'pokus', 'more');
+        $qa_content['s_view']['version_label'] = qa_lang_html('plugin_bash/detail_script_version_title');
+        $qa_content['s_view']['versions'] = array('1.0', '2.0', '3.0', '4.0');
 
         $qa_content['form'] = array(
             'tags' => 'METHOD="POST" ACTION="' . qa_self_html() . '" enctype="multipart/form-data"',

@@ -22,9 +22,13 @@ return array(
     'run_script_label_dataout' => 'Processed data',
     'run_script_run_button' => 'Run script',
     'run_script_vote' => 'Don\'t forget to vote this script!',
+    'detail_script_version_title' => 'version ',
     'detail_script_title' => 'List of scripts',
     'detail_script_example_data' => 'Example Data',
     'detail_script_run_button' => 'Run script',
     'detail_script_edit_button' => 'Edit script',
+    'detail_script_delete_button' => 'Delete script',
+    'detail_script_public_button' => 'Publish script',
+    'detail_script_private_button' => 'Hide script for everyone except me',
 );
 
