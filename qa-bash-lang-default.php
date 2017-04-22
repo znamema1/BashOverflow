@@ -25,6 +25,7 @@ return array(
     'detail_script_version_label' => 'version ',
     'detail_script_exec_label' => ' runs',
     'detail_script_title' => 'List of scripts',
+    'detail_script_script_label_for_x' => 'Script ^',
     'detail_script_example_data' => 'Example Data',
     'detail_script_run_button' => 'Run script',
     'detail_script_edit_button' => 'Edit script',
