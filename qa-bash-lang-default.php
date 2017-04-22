@@ -1,0 +1,30 @@
+<?php
+
+return array(
+    'create_script_title' => 'Create script',
+    'create_script_name' => 'Script name',
+    'create_script_desc' => 'Script description',
+    'create_script_tags' => 'Script tags',
+    'create_script_git' => 'Link to Github repository',
+    'create_script_file' => 'Path to file to run',
+    'create_script_comm' => 'Commit',
+    'create_script_add_script' => 'Add script',
+    'create_script_remove_script' => 'Remove script',
+    'create_script_example' => 'Example data',
+    'create_script_save_button' => 'Save script',
+    'create_script_run_button' => 'Run script',
+    'edit_script_title' => 'Edit script',
+    'edit_script_message' => 'Edit message',
+    'run_script_title' => 'Run script',
+    'run_script_error' => 'No script selected to run!',
+    'run_script_label_datain' => 'Input data',
+    'run_script_label_filein' => 'Upload file',
+    'run_script_label_dataout' => 'Processed data',
+    'run_script_run_button' => 'Run script',
+    'run_script_vote' => 'Don\'t forget to vote this script!',
+    'detail_script_title' => 'List of scripts',
+    'detail_script_example_data' => 'Example Data',
+    'detail_script_run_button' => 'Run script',
+    'detail_script_edit_button' => 'Edit script',
+);
+
