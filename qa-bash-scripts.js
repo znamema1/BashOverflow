@@ -1,4 +1,3 @@
-
 function getCounter() {
     var counter = $('#counter').attr('value');
     return counter;
@@ -9,21 +8,23 @@ function setCounter(number) {
 }
 
 function getContent(counter) {
-    return '<tr><td class="qa-form-tall-label">Link to Github repository</td></tr>' +
-            '<tr><td class="qa-form-tall-data"><input name="scriptgit' + counter + '" id="scriptgit' + counter + '" type="text" value="" class="qa-form-tall-text"></td></tr>' +
-            '<tr><td class="qa-form-tall-label">Path to file to run</td></tr>' +
-            '<tr><td class="qa-form-tall-data"><input name="scriptfile' + counter + '" id="scriptfile' + counter + '" type="text" value="" class="qa-form-tall-text"></td></tr>' +
-            '<tr><td class="qa-form-tall-label">Commit</td></tr>' +
-            '<tr><td class="qa-form-tall-data"><input name="scriptcomm' + counter + '" id="scriptcomm' + counter + '" type="text" value="" class="qa-form-tall-text"></td></tr>' +
-            '<tr><td colspan="1" class="qa-form-tall-spacer">&nbsp;</td></tr>';
+    return '<tr style="display: none"><td class="qa-form-tall-label">Link to Github repository</td></tr>' +
+            '<tr style="display: none"><td class="qa-form-tall-data"><input name="scriptgit' + counter + '" id="scriptgit' + counter + '" type="text" value="" class="qa-form-tall-text"></td></tr>' +
+            '<tr style="display: none"><td class="qa-form-tall-label">Path to file to run</td></tr>' +
+            '<tr style="display: none"><td class="qa-form-tall-data"><input name="scriptfile' + counter + '" id="scriptfile' + counter + '" type="text" value="" class="qa-form-tall-text"></td></tr>' +
+            '<tr style="display: none"><td class="qa-form-tall-label">Commit</td></tr>' +
+            '<tr style="display: none"><td class="qa-form-tall-data"><input name="scriptcomm' + counter + '" id="scriptcomm' + counter + '" type="text" value="" class="qa-form-tall-text"></td></tr>' +
+            '<tr style="display: none"><td colspan="1" class="qa-form-tall-spacer">&nbsp;</td></tr>';
 }
 
 function addScript() {
     var counter = getCounter();
 
-    var content = getContent(counter);
+    var $content = $(getContent(counter));
 
-    $('#counter').parent().parent().before(content);
+    $('#counter').parent().parent().before($content);
+    const ANIM_DUR = 400;
+    $content.show(ANIM_DUR);
 
     setCounter(++counter);
 }
@@ -33,13 +34,18 @@ function removeScript() {
     if (counter <= 2) {
         return;
     }
-    
-    var parent = $('#counter').parent().parent();
-    
-    for (var i = 0; i < 7; i++) {
-        parent.prev().remove();
-    }
 
+    var $current = $('#counter').parent().parent().prev();
+    var $toRemove = $();
+
+    for (var i = 0; i < 7; i++) {
+        $toRemove = $toRemove.add($current);
+        $current = $current.prev();
+    }
+    const ANIM_DUR = 400;
+    $toRemove.hide(ANIM_DUR, function () {
+        $toRemove.remove();
+    });
 
     setCounter(--counter);
 }
