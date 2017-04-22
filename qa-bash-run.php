@@ -37,6 +37,7 @@ class qa_bash_run_page {
         $qa_content['s_view']['when'] = '2 minutes ago';
         $qa_content['s_view']['who'] = 'by martin';
         $qa_content['s_view']['score'] = 99;
+        $qa_content['s_view']['score_label'] = qa_lang_html_sub_split('main/x_votes', '')['suffix'];
         $qa_content['s_view']['exec_count'] = 234;
         $qa_content['s_view']['desc'] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque a scelerisque nisl. Sed gravida ligula odio, et accumsan velit convallis sit amet. Integer sed nulla sed leo bibendum sollicitudin. Nulla eu congue mauris. Suspendisse potenti. Suspendisse vestibulum fermentum libero id vehicula. Integer ullamcorper mi velit, ac pulvinar magna condimentum a. Etiam malesuada magna a enim mollis egestas. Nulla id sem commodo, consectetur ante in, consequat nisi. Nunc nisi ante, tempor a urna non, finibus eleifend metus. Morbi lorem augue, rutrum sit amet varius lacinia, varius vel nisi. Praesent malesuada sapien id odio gravida, sed ultrices nulla dapibus.";
         $qa_content['s_view']['tags'] = array('test', 'pokus', 'more');

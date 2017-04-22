@@ -31,5 +31,6 @@ return array(
     'detail_script_delete_button' => 'Delete script',
     'detail_script_public_button' => 'Publish script',
     'detail_script_private_button' => 'Hide script for everyone except me',
+    'list_script_title' => 'List of scripts',
 );
 

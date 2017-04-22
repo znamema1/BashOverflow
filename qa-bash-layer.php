@@ -14,14 +14,14 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_view($s_view) {
         $this->output('<div class="qa-part-q-view">');
-        $this->s_view_stats($s_view);
+        $this->s_stats($s_view, 'qa-q-view');
         $this->s_view_main($s_view);
         $this->q_view_clear($s_view);
         $this->output('</div> <!-- END qa-s-view -->', '');
     }
 
-    function s_view_stats($s_view) {
-        $this->output('<div class="qa-q-view-stats">');
+    function s_stats($s_view, $class) {
+        $this->output('<div class="'.$class.'-stats">');
         $this->s_voting($s_view);
         $this->s_exec_count($s_view);
         $this->output('</div>');
@@ -47,8 +47,8 @@ class qa_html_theme_layer extends qa_html_theme_base {
     function s_vote_count($s_view) {
         $this->output('<div class="qa-vote-count qa-vote-count-net">');
         $this->output('<span class="qa-netvote-count">');
-        $this->output('<span class="qa-netvote-count-data">', @$s_view['score'], '</span>');
-        $this->output('<span class="qa-netvote-count-pad"> votes</span>');
+        $this->output('<span class="qa-netvote-count-data">', $s_view['score'], '</span>');
+        $this->output('<span class="qa-netvote-count-pad">'.$s_view['score_label'].'</span>');
         $this->output('</span>');
         $this->output('</div>');
     }
@@ -61,22 +61,22 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_view_main($s_view) {
         $this->output('<div class="qa-q-view-main">');
-        $this->s_view_meta($s_view);
+        $this->s_meta($s_view,'qa-q-view');
         $this->s_view_content($s_view);
         $this->s_post_tags($s_view, 'qa-q-view');
         $this->output('</div>');
     }
 
-    function s_view_meta($s_view) {
-        $this->output('<span class="qa-q-view-avatar-meta">');
-        $this->output('<span class="qa-q-view-meta">');
-        $this->s_view_meta_content($s_view, 'qa-q-view');
-        $this->s_view_meta_version($s_view);
+    function s_meta($s_view, $class) {
+        $this->output('<span class="'.$class.'-avatar-meta">');
+        $this->output('<span class="'.$class.'-meta">');
+        $this->s_meta_content($s_view, $class);
+        $this->s_meta_version($s_view);
         $this->output('</span>');
         $this->output('</span>');
     }
 
-    function s_view_meta_content($s_view, $class) {
+    function s_meta_content($s_view, $class) {
         $this->output('<span class="' . $class . '-what">' . $s_view['what'] . '</span>');
         $this->output('<span class="' . $class . '-when">' . $s_view['when'] . '</span>');
         $this->output('<span class="' . $class . '-who">' . $s_view['who'] . '</span>');
@@ -88,7 +88,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
         }
     }
 
-    function s_view_meta_version($s_view) {
+    function s_meta_version($s_view) {
         if (isset($s_view['versions'])) {
             $this->output('<span style="float: right">');
             $this->output('<select>');
@@ -119,12 +119,38 @@ class qa_html_theme_layer extends qa_html_theme_base {
         }
     }
 
-    function s_list($part) {
-        $this->output($part);
+    function s_list($s_list) {
+        $this->output('<div class="qa-q-list qa-q-list-vote-disabled">');
+        $this->s_list_items($s_list);
+        $this->output('</div> <!-- END qa-q-list -->', '');
+    }
+
+    function s_list_items($s_list) {
+        foreach ($s_list as $s_item) {
+            $this->s_list_item($s_item);
+        }
+    }
+
+    function s_list_item($s_item) {
+        $this->output('<div class="qa-q-list-item">');
+
+        $this->s_stats($s_item,'qa-q-item');
+        $this->s_item_main($s_item);
+        $this->q_item_clear();
+
+        $this->output('</div> <!-- END qa-q-list-item -->', '');
+    }
+
+    function s_item_main($s_item) {
+        $this->output('<div class="qa-q-item-main">');
+        $this->q_item_title($s_item);
+        $this->s_meta($s_item, 'qa-q-item');
+        $this->s_post_tags($s_item, 'qa-q-item');
+        $this->output('</div>');
     }
 
     function generate_stag_html($tag) {
-        return '<a href="./stag/' . $tag . '"'
+        return '<a href="../stag/' . $tag . '"'
                 . ' class="qa-tag-link">'
                 . $tag
                 . '</a>';
