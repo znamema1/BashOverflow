@@ -1,0 +1,9 @@
+{
+	"name": "BashOverflow plugin",
+	"description": "Extends the functionality of Q2A by script managing",
+	"version": "0.1",
+	"date": "2017-04-16",
+	"author": "Martin Znamenáček",
+	"license": "GPLv2",
+	"min_q2a": "1.7"
+}
