@@ -23,6 +23,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
     function s_view_stats($s_view) {
         $this->output('<div class="qa-q-view-stats">');
         $this->s_voting($s_view);
+        $this->s_exec_count($s_view);
         $this->output('</div>');
     }
 
@@ -35,7 +36,12 @@ class qa_html_theme_layer extends qa_html_theme_base {
     }
 
     function s_vote_buttons($s_view) {
-        // priprava na vote
+        if (isset($s_view['vote_up']) && isset($s_view['vote_down'])) {
+            $this->output('<div class="qa-vote-buttons qa-vote-buttons-net">');
+            $this->output('<input title="' . $s_view['vote_up'] . '" name="vote_up" onclick="return qa_vote_click(this);" type="submit" value="+" class="qa-vote-first-button qa-vote-up-button"> ');
+            $this->output('<input title="' . $s_view['vote_down'] . '" name="vote_down" onclick="return qa_vote_click(this);" type="submit" value="–" class="qa-vote-second-button qa-vote-down-button"> ');
+            $this->output('</div>');
+        }
     }
 
     function s_vote_count($s_view) {
@@ -45,6 +51,12 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('<span class="qa-netvote-count-pad"> votes</span>');
         $this->output('</span>');
         $this->output('</div>');
+    }
+
+    function s_exec_count($s_view) {
+        $this->output('<span class="qa-view-count">');
+        $this->output('<span class="qa-view-count-data">' . $s_view['exec_count'] . '</span><span class="qa-view-count-pad">' . $s_view['exec_label'] . '</span>');
+        $this->output('</span>');
     }
 
     function s_view_main($s_view) {
@@ -78,7 +90,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_view_meta_version($s_view) {
         if (isset($s_view['versions'])) {
-            $this->output('<span>');
+            $this->output('<span style="float: right">');
             $this->output('<select>');
             foreach ($s_view['versions'] as $version) {
                 $this->output('<option value = ' . $version . '>' . $s_view['version_label'] . ' ' . $version . '</option>');
