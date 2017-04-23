@@ -25,6 +25,7 @@ class qa_bash_create_page {
         }
         $qa_content = qa_content_prepare();
         $qa_content['script_src'][] = $this->urltoroot . 'qa-bash-scripts.js';
+        $qa_content['css_src'][] = $this->urltoroot . 'qa-bash-scripts.css';
 
 
         if ($edit) {
@@ -181,10 +182,10 @@ class qa_bash_create_page {
     function get_buttons() {
         //return '<input name="dosave" value="Save script" title="" type="submit" class="qa-form-tall-button qa-form-tall-button-0"><input name="dosave" value="Save script" title="" type="submit" class="qa-form-tall-button qa-form-tall-button-0">';
 
-        return '<input type="button" onclick="addScript();" style="margin-right:5px" class="qa-form-tall-button" value="'
-                . qa_lang_html('plugin_bash/create_script_add_script') . '"/>'
-                . '<input type="button" onclick="removeScript();" class="qa-form-tall-button" value="'
-                . qa_lang_html('plugin_bash/create_script_remove_script') . '"/>';
+        return '<button type="button" id="btn-add" onclick="addScript();" class="qa-form-tall-button">'
+                . qa_lang_html('plugin_bash/create_script_add_script') . '</button>'
+                . '<button type="button" id="btn-remove" onclick="removeScript();" class="qa-form-tall-button">'
+                . qa_lang_html('plugin_bash/create_script_remove_script') . '</button>';
     }
 
 //    public function init_queries($table_list) {

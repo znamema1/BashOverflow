@@ -1,3 +1,5 @@
+const ANIM_DUR = 400;
+
 function getCounter() {
     var counter = $('#counter').attr('value');
     return counter;
@@ -19,20 +21,25 @@ function getContent(counter) {
 
 function addScript() {
     var counter = getCounter();
-
     var $content = $(getContent(counter));
 
     $('#counter').parent().parent().before($content);
-    const ANIM_DUR = 400;
+
     $content.show(ANIM_DUR);
 
     setCounter(++counter);
+    if (counter <= 3) {
+        $("#btn-remove").removeClass("qa-btn-disabled");
+    }
 }
 
 function removeScript() {
     var counter = getCounter();
+
     if (counter <= 2) {
         return;
+    } else if (counter <= 3) {
+        $("#btn-remove").addClass("qa-btn-disabled");
     }
 
     var $current = $('#counter').parent().parent().prev();
@@ -42,10 +49,16 @@ function removeScript() {
         $toRemove = $toRemove.add($current);
         $current = $current.prev();
     }
-    const ANIM_DUR = 400;
+
     $toRemove.hide(ANIM_DUR, function () {
         $toRemove.remove();
     });
 
     setCounter(--counter);
 }
+
+$(document).ready(function () {
+    if (getCounter() <= 3)
+        $("#btn-remove").addClass("qa-btn-disabled");
+});
+

@@ -1,0 +1,8 @@
+button[type="button"] {
+    margin-right: 5px;
+}
+
+.qa-btn-disabled {
+    background-color: #bdc3c7 !important;
+    cursor: auto;
+}
