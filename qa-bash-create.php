@@ -13,7 +13,7 @@ class qa_bash_create_page {
 
     public function init_queries($table_list) {
         require_once $this->directory . 'qa-bash-db.php';
-        init_db_tables($table_list);
+        return init_db_tables($table_list);
     }
 
     function match_request($request) {
