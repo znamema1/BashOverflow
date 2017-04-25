@@ -29,6 +29,7 @@ class qa_bash_run_page {
         }
 
         $qa_content = qa_content_prepare();
+        $qa_content['script_src'][] = $this->urltoroot . 'qa-bash-script-run.js';
 
         if (!isset($scriptid)) {
             $qa_content['error'] = qa_lang_html('main/page_not_found');
@@ -70,12 +71,12 @@ class qa_bash_run_page {
                 ),
                 array(
                     'type' => 'static',
-                    'label' => '<span>' . qa_lang_html('plugin_bash/run_script_label_filein') . ': ' . '</span><input name="filein" type="file">',
+                    'label' => '<span>' . qa_lang_html('plugin_bash/run_script_label_filein') . ': ' . '</span><input name="filein" id="filein" type="file">',
                 ),
             ),
             'buttons' => array(
                 array(
-                    'tags' => 'NAME="dorun"',
+                    'tags' => 'type="button" NAME="dorun" onclick="handleInput(this);"',
                     'label' => qa_lang_html('plugin_bash/run_script_run_button'),
                 ),
             ),

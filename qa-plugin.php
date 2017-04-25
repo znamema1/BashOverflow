@@ -52,3 +52,25 @@ qa_register_plugin_layer(
         'layer hack' // human-readable name of layer
 );
 
+qa_register_plugin_module(
+        'page', // type of module
+        'qa-bash-ajax-create.php', // PHP file containing module class
+        'qa_bash_ajax_create_page', // name of module class
+        'ajax for create page' // human-readable name of module
+);
+
+qa_register_plugin_module(
+        'page', // type of module
+        'qa-bash-ajax-run-text.php', // PHP file containing module class
+        'qa_bash_ajax_run_page_text', // name of module class
+        'ajax for run page text' // human-readable name of module
+);
+
+
+qa_register_plugin_module(
+        'page', // type of module
+        'qa-bash-ajax-run-file.php', // PHP file containing module class
+        'qa_bash_ajax_run_page_file', // name of module class
+        'ajax for run page file' // human-readable name of module
+);
+
