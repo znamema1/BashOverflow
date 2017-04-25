@@ -2,60 +2,54 @@
 
 class qa_bash_detail_page {
 
+    private $urltoroot;
+    private $directory;
+
+    public function load_module($directory, $urltoroot) {
+        $this->urltoroot = $urltoroot;
+        $this->directory = $directory;
+    }
+
     function match_request($request) {
         $parts = explode('/', $request);
         return $parts[0] == 'script';
     }
 
     function process_request($request) {
+        require_once $this->directory . 'qa-bash-base.php';
+        require_once $this->directory . 'qa-bash-s-view.php';
+
         $parts = explode('/', $request);
-        $script = @$parts[1];
+        $scriptid = @$parts[1];
+        $version = @qa_get('ver');
+
+        if (qa_clicked('version')) {
+            qa_redirect($request, array("ver" => qa_post_text('version')));
+        }
+
         $qa_content = qa_content_prepare();
 
-        if (!isset($script)) {
+        if (!isset($scriptid)) {
             $qa_content['error'] = qa_lang_html('main/page_not_found');
             return $qa_content;
         }
+        $script = get_script($scriptid, $version);
 
-        $qa_content['title'] = ' ....jméno skriptu....';
+        if (!isset($script)) {
+            $qa_content['error'] = qa_lang_html('plugin_bash/detail_script_no_script_error');
+            return $qa_content;
+        }
+
+        $qa_content['title'] = $script['name'];
 
         if (qa_clicked('dorun')) {
-            qa_redirect('run/1');
+            qa_redirect('run/1', (isset($version) ? array("ver" => $version) : null));
         }
         if (qa_clicked('doedit')) {
-            qa_redirect('edit_script' . '/1');
+            qa_redirect('edit_script/' . $scriptid);
         }
 
-        $data = array(
-            "1" => array(
-                'git' => 'https://www.github.com',
-                'file' => './run.sh',
-                'comm' => '34TGZSNICKSIUZ',
-            ),
-            "2" => array(
-                'git' => 'https://www.github.com',
-                'file' => './run.sh',
-                'comm' => '34TGZSNICKSIUZ',
-            ),
-            "3" => array(
-                'git' => 'https://www.github.com',
-                'file' => './run.sh',
-                'comm' => '34TGZSNICKSIUZ',
-            ),
-        );
-        $qa_content['s_view']['what'] = 'created';
-        $qa_content['s_view']['when'] = '2 minutes ago';
-        $qa_content['s_view']['who'] = 'by martin';
-        $qa_content['s_view']['score'] = 99;
-        $qa_content['s_view']['score_label'] = qa_lang_html_sub_split('main/x_votes', '')['suffix'];
-        $qa_content['s_view']['exec_count'] = 234;
-        $qa_content['s_view']['desc'] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque a scelerisque nisl. Sed gravida ligula odio, et accumsan velit convallis sit amet. Integer sed nulla sed leo bibendum sollicitudin. Nulla eu congue mauris. Suspendisse potenti. Suspendisse vestibulum fermentum libero id vehicula. Integer ullamcorper mi velit, ac pulvinar magna condimentum a. Etiam malesuada magna a enim mollis egestas. Nulla id sem commodo, consectetur ante in, consequat nisi. Nunc nisi ante, tempor a urna non, finibus eleifend metus. Morbi lorem augue, rutrum sit amet varius lacinia, varius vel nisi. Praesent malesuada sapien id odio gravida, sed ultrices nulla dapibus.";
-        $qa_content['s_view']['tags'] = array('test', 'pokus', 'more');
-        $qa_content['s_view']['version_label'] = qa_lang_html('plugin_bash/detail_script_version_label');
-        $qa_content['s_view']['exec_label'] = qa_lang_html('plugin_bash/detail_script_exec_label');
-
-        $qa_content['s_view']['versions'] = array('1.0', '2.0', '3.0', '4.0');
-
+        $qa_content['s_view'] = generate_s_view_content($script);
 
         $qa_content['form'] = array(
             'tags' => 'METHOD="POST" ACTION="' . qa_self_html() . '" enctype="multipart/form-data"',
@@ -69,8 +63,9 @@ class qa_bash_detail_page {
                 array(
                     'type' => 'textarea',
                     'rows' => 10,
-                    'tags' => 'NAME="datain" ID="datain" readonly',
+                    'tags' => 'NAME="dataexample" ID="dataexample" readonly',
                     'label' => qa_lang_html('plugin_bash/detail_script_example_data'),
+                    'value' => $script['example_data'],
                 ),
             ),
             'buttons' => array(
@@ -81,7 +76,7 @@ class qa_bash_detail_page {
                 ),
             ),
         );
-        $qa_content['form']['fields'] = $this->data_to_fields($data);
+        $qa_content['form']['fields'] = $this->repos_to_fields($script['repos']);
         if (true) { // owner
             $qa_content['form2']['buttons'][] = array(
                 'tags' => 'NAME="doedit"',
@@ -111,7 +106,7 @@ class qa_bash_detail_page {
         return $qa_content;
     }
 
-    function data_to_fields($data) {
+    function repos_to_fields($data) {
         $ret = array();
         $counter = 1;
         if (isset($data)) {
