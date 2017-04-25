@@ -91,8 +91,10 @@ function get_script($scriptid, $ver = null) {
     $stags = qa_db_get_stags($scriptid, $ver);
     $repos = qa_db_get_repos($scriptid, $ver);
 
-    foreach ($stags as $value) {
-        $tags[] = $value['stag'];
+    if (!empty($stags[0]['stag'])) {
+        foreach ($stags as $value) {
+            $tags[] = $value['stag'];
+        }
     }
 
     $script['name'] = $data['name'];
@@ -115,35 +117,36 @@ function get_script($scriptid, $ver = null) {
     }
     return $script;
 }
+
 /*
-function get_scripts_by_tag($tag, $start = 0) {
-    $scripts = db_getscripts_versions_by_tag($tag, $start);
-}
+  function get_scripts_by_tag($tag, $start = 0) {
+  $scripts = db_getscripts_versions_by_tag($tag, $start);
+  }
 
-function get_scripts_by_user($userid, $start) {
-    $userid = qa_get_logged_in_userid();
-    $scripts = db_get_scripts_by_user($userid);
-    $scripts = db_get_curr_versions_by_scriptid($scripts['id']);
+  function get_scripts_by_user($userid, $start) {
+  $userid = qa_get_logged_in_userid();
+  $scripts = db_get_scripts_by_user($userid);
+  $scripts = db_get_curr_versions_by_scriptid($scripts['id']);
 
 
-    return $array;
-}
+  return $array;
+  }
 
-function get_all_scripts($type, $start) {
-    return db_get_script($type, $start);
-}
+  function get_all_scripts($type, $start) {
+  return db_get_script($type, $start);
+  }
 
-function get_script_by_query($query, $start) {
-    //??
-}
+  function get_script_by_query($query, $start) {
+  //??
+  }
 
-function run_script($script) {
-    // api connect
-}
+  function run_script($script) {
+  // api connect
+  }
 
-function vote_script($script, $vote) {
-    
-}*/
+  function vote_script($script, $vote) {
+
+  } */
 
 function user_add_points_create($userid) {
     $points = 10;
