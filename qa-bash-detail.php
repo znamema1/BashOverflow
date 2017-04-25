@@ -40,7 +40,7 @@ class qa_bash_detail_page {
             return $qa_content;
         }
 
-        $qa_content['title'] = $script['name'];
+        $qa_content['title'] = qa_html($script['name']);
 
         if (qa_clicked('dorun')) {
             qa_redirect('run/1', (isset($version) ? array("ver" => $version) : null));
@@ -54,7 +54,7 @@ class qa_bash_detail_page {
         $qa_content['form'] = array(
             'tags' => 'METHOD="POST" ACTION="' . qa_self_html() . '" enctype="multipart/form-data"',
             'style' => 'wide',
-            'title' => 'Scripts',
+            'title' => qa_html('Scripts'),
         );
         $qa_content['form2'] = array(
             'tags' => 'METHOD="POST" ACTION="' . qa_self_html() . '" enctype="multipart/form-data"',
@@ -65,7 +65,7 @@ class qa_bash_detail_page {
                     'rows' => 10,
                     'tags' => 'NAME="dataexample" ID="dataexample" readonly',
                     'label' => qa_lang_html('plugin_bash/detail_script_example_data'),
-                    'value' => $script['example_data'],
+                    'value' => qa_html($script['example_data']),
                 ),
             ),
             'buttons' => array(
@@ -119,19 +119,19 @@ class qa_bash_detail_page {
                     'type' => 'static',
                     'tags' => 'NAME="scriptgit' . $counter . '" ID="scriptgit' . $counter . '"',
                     'label' => qa_lang_html('plugin_bash/create_script_git'),
-                    'value' => '<a href ="' . $script['git'] . '">' . $script['git'] . '</a>',
+                    'value' => '<a href ="' . qa_html($script['git']) . '">' . qa_html($script['git']) . '</a>',
                 );
                 $ret[] = array(
                     'type' => 'static',
                     'tags' => 'NAME="scriptfile' . $counter . '" ID="scriptfile' . $counter . '"',
                     'label' => qa_lang_html('plugin_bash/create_script_file'),
-                    'value' => $script['file'],
+                    'value' => qa_html($script['file']),
                 );
                 $ret[] = array(
                     'type' => 'static',
                     'tags' => 'NAME="scriptcomm' . $counter . '" ID="scriptcomm' . $counter . '"',
                     'label' => qa_lang_html('plugin_bash/create_script_comm'),
-                    'value' => $script['comm'],
+                    'value' => qa_html($script['comm']),
                 );
                 $counter++;
             }

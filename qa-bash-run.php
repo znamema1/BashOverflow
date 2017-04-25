@@ -42,7 +42,7 @@ class qa_bash_run_page {
             return $qa_content;
         }
 
-        $qa_content['title'] = $script['name'];
+        $qa_content['title'] = qa_html($script['name']);
 
         if (qa_clicked('dorun')) {
             $this->afterrun = true;
@@ -66,7 +66,7 @@ class qa_bash_run_page {
                     'rows' => 10,
                     'tags' => 'NAME="datain" ID="datain"',
                     'label' => qa_lang_html('plugin_bash/run_script_label_datain'),
-                    'value' => @$script['example_data'],
+                    'value' => qa_html(@$script['example_data']),
                 ),
                 array(
                     'type' => 'static',
@@ -90,7 +90,7 @@ class qa_bash_run_page {
                         'rows' => 10,
                         'tags' => 'NAME="dataout" ID="dataout"',
                         'label' => qa_lang_html('plugin_bash/run_script_label_dataout'),
-                        'value' => 'toto se objeví až po spuštění skriptu',
+                        'value' => qa_html('toto se objeví až po spuštění skriptu'),
                     ),
                     array(
                         'type' => 'static',

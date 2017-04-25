@@ -157,9 +157,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
     }
 
     function generate_stag_html($tag) {
-        return '<a href="../stag/' . $tag . '"'
+        return '<a href="../stag/' . qa_html($tag) . '"'
                 . ' class="qa-tag-link">'
-                . $tag
+                . qa_html($tag)
                 . '</a>';
     }
 

@@ -102,24 +102,24 @@ class qa_bash_create_page {
                     'rows' => 1,
                     'tags' => 'NAME="scriptname" ID="scriptname"',
                     'label' => qa_lang_html('plugin_bash/create_script_name'),
-                    'value' => @$script['name'],
-                    'error' => @$script['name_error'],
+                    'value' => qa_html(@$script['name']),
+                    'error' => qa_html(@$script['name_error']),
                 ),
                 array(
                     'type' => 'textarea',
                     'rows' => 6,
                     'tags' => 'NAME="scriptdesc" ID="scriptdesc"',
                     'label' => qa_lang_html('plugin_bash/create_script_desc'),
-                    'value' => @$script['desc'],
-                    'error' => @$script['desc_error'],
+                    'value' => qa_html(@$script['desc']),
+                    'error' => qa_html(@$script['desc_error']),
                 ),
                 array(
                     'type' => 'text',
                     'rows' => 1,
                     'tags' => 'NAME="scripttags" ID="scripttags"',
                     'label' => qa_lang_html('plugin_bash/create_script_tags'),
-                    'value' => @$script['tags'],
-                    'error' => @$script['tags_error'],
+                    'value' => qa_html(@$script['tags']),
+                    'error' => qa_html(@$script['tags_error']),
                 ),
                 array(
                     'type' => 'blank',
@@ -149,8 +149,8 @@ class qa_bash_create_page {
             'rows' => 6,
             'tags' => 'NAME="scriptexample" ID="scriptexample"',
             'label' => qa_lang_html('plugin_bash/create_script_example'),
-            'value' => @$script['example_data'],
-            'error' => @$script['example_data_error'],
+            'value' => qa_html(@$script['example_data']),
+            'error' => qa_html(@$script['example_data_error']),
         );
 
         if ($mode === $this->EDIT_MODE) {
@@ -163,8 +163,8 @@ class qa_bash_create_page {
                 'rows' => 1,
                 'tags' => 'NAME="comm_msg" ID="comm_msg"',
                 'label' => qa_lang_html('plugin_bash/edit_script_message'),
-                'value' => @$script['comm_msg'],
-                'error' => @$script['comm_msg_error'],
+                'value' => qa_html(@$script['comm_msg']),
+                'error' => qa_html(@$script['comm_msg_error']),
             );
         }
         return $fields;
@@ -219,24 +219,24 @@ class qa_bash_create_page {
                 'rows' => 1,
                 'tags' => 'NAME="scriptgit' . $counter . '" ID="scriptgit' . $counter . '"',
                 'label' => qa_lang_html('plugin_bash/create_script_git'),
-                'value' => @$script['git'],
-                'error' => @$script['git_error'],
+                'value' => qa_html(@$script['git']),
+                'error' => qa_html(@$script['git_error']),
             ),
             array(
                 'type' => 'text',
                 'rows' => 1,
                 'tags' => 'NAME="scriptfile' . $counter . '" ID="scriptfile' . $counter . '"',
                 'label' => qa_lang_html('plugin_bash/create_script_file'),
-                'value' => @$script['file'],
-                'error' => @$script['file_error'],
+                'value' => qa_html(@$script['file']),
+                'error' => qa_html(@$script['file_error']),
             ),
             array(
                 'type' => 'text',
                 'rows' => 1,
                 'tags' => 'NAME="scriptcomm' . $counter . '" ID="scriptcomm' . $counter . '"',
                 'label' => qa_lang_html('plugin_bash/create_script_comm'),
-                'value' => @$script['comm'],
-                'error' => @$script['comm_error'],
+                'value' => qa_html(@$script['comm']),
+                'error' => qa_html(@$script['comm_error']),
             ),
         );
         return $fields;
