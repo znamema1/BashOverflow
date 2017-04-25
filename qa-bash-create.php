@@ -3,9 +3,17 @@
 class qa_bash_create_page {
 
     private $urltoroot;
+    private $directory;
+    private $EDIT_MODE = 'edit_script';
 
     public function load_module($directory, $urltoroot) {
         $this->urltoroot = $urltoroot;
+        $this->directory = $directory;
+    }
+
+    public function init_queries($table_list) {
+        require_once $this->directory . 'qa-bash-db.php';
+        init_db_tables($table_list);
     }
 
     function match_request($request) {
@@ -14,37 +22,52 @@ class qa_bash_create_page {
     }
 
     function process_request($request) {
+        require_once $this->directory . 'qa-bash-base.php';
         $parts = explode('/', $request);
-        $edit = $parts[0] === 'edit_script';
-        $script;
-        if ($edit) {
-            $script = $parts[1];
-            if (!isset($script)) {
-                qa_redirect('create_script');
-            }
-        }
+        $mode = $parts[0];
+
         $qa_content = qa_content_prepare();
         $qa_content['script_src'][] = $this->urltoroot . 'qa-bash-scripts.js';
         $qa_content['css_src'][] = $this->urltoroot . 'qa-bash-scripts.css';
 
+        if ($mode === $this->EDIT_MODE) {
+            $qa_content['title'] = qa_lang_html('plugin_bash/edit_script_title');
+            $scriptid = $parts[1];
 
-        if ($edit) {
-            $qa_content['title'] = qa_lang_html('plugin_bash/edit_script_title') . ' ' . $script;
+            if (!isset($scriptid)) {
+                qa_redirect('create_script');
+            }
+
+            $script = get_script($scriptid);
+
+            if (!isset($script)) {
+                $qa_content['error'] = qa_lang_html('plugin_bash/edit_script_error');
+                return $qa_content;
+            }
+            $script['tags'] = implode(' ', $script['tags']);
+            unset($script['comm_msg']);
         } else {
             $qa_content['title'] = qa_lang_html('plugin_bash/create_script_title');
         }
+
         if (qa_clicked('dosave')) {
-            $scripts = array();
-            $counter = qa_post_text('counter') - 1;
-            for ($i = 1; $i <= $counter; $i++) {
-                $scripts[] = array(
-                    'git' => qa_post_text('scriptgit' . $i),
-                    'file' => qa_post_text('scriptfile' . $i),
-                    'comm' => qa_post_text('scriptcomm' . $i),
-                );
+            $script = $this->load_script();
+
+            $validation_ok = validate_script($script, $mode === $this->EDIT_MODE);
+
+            if ($validation_ok) {
+                if ($mode === $this->EDIT_MODE) {
+                    update_script($scriptid, $script);
+                } else {
+                    $scriptid = create_script($script);
+                }
+
+                qa_redirect('script/' . $scriptid);
+            } else {
+                $qa_content['error'] = qa_lang_html('plugin_bash/create_script_error');
             }
-        } else {
-            $scripts = array(
+        } else if ($mode !== $this->EDIT_MODE) {
+            $script['repos'] = array(
                 array(
                     'git' => '',
                     'file' => '',
@@ -52,7 +75,25 @@ class qa_bash_create_page {
                 ),
             );
         }
-        $qa_content['form'] = array(
+
+        $qa_content['form'] = $this->init_form($script);
+        $qa_content['form']['fields'] = array_merge($qa_content['form']['fields'], $this->add_repo_fields($script['repos']));
+        $qa_content['form']['fields'] = array_merge($qa_content['form']['fields'], $this->add_after_repo_fields($script, $mode));
+        $qa_content['form']['fields'][] = $qa_content['focusid'] = 'scriptname';
+
+        return $qa_content;
+    }
+
+    function generate_form($script) {
+        $form = $this->init_form($script);
+        $form['fields'] = array_merge($qa_content['form']['fields'], $this->add_repo_fields($script['repos']));
+        $form['fields'] = array_merge($qa_content['form']['fields'], $this->add_after_repo_fields($script, $mode));
+        $form['fields'][] = $qa_content['focusid'] = 'scriptname';
+        return $form;
+    }
+
+    function init_form($script) {
+        return array(
             'tags' => 'METHOD="POST" ACTION="' . qa_self_html() . '"',
             'style' => 'tall',
             'fields' => array(
@@ -61,18 +102,24 @@ class qa_bash_create_page {
                     'rows' => 1,
                     'tags' => 'NAME="scriptname" ID="scriptname"',
                     'label' => qa_lang_html('plugin_bash/create_script_name'),
+                    'value' => @$script['name'],
+                    'error' => @$script['name_error'],
                 ),
                 array(
                     'type' => 'textarea',
                     'rows' => 6,
                     'tags' => 'NAME="scriptdesc" ID="scriptdesc"',
                     'label' => qa_lang_html('plugin_bash/create_script_desc'),
+                    'value' => @$script['desc'],
+                    'error' => @$script['desc_error'],
                 ),
                 array(
                     'type' => 'text',
                     'rows' => 1,
                     'tags' => 'NAME="scripttags" ID="scripttags"',
                     'label' => qa_lang_html('plugin_bash/create_script_tags'),
+                    'value' => @$script['tags'],
+                    'error' => @$script['tags_error'],
                 ),
                 array(
                     'type' => 'blank',
@@ -86,53 +133,69 @@ class qa_bash_create_page {
                 ),
             ),
         );
-        $qa_content['form']['fields'] = array_merge($qa_content['form']['fields'], $this->add_script_fields($scripts));
-        $qa_content['form']['fields'][] = array(
+    }
+
+    function add_after_repo_fields($script, $mode) {
+        $fields [] = array(
             'type' => 'custom',
-            'html' => $this->get_buttons(),
+            'html' => $this->get_handle_buttons(),
         );
-        $qa_content['form']['fields'][] = array(
+        $fields [] = array(
             'type' => 'blank',
             'rows' => 1,
         );
-        $qa_content['form']['fields'][] = array(
+        $fields [] = array(
             'type' => 'textarea',
             'rows' => 6,
-            'tags' => 'NAME="scriptdesc" ID="scriptdesc"',
+            'tags' => 'NAME="scriptexample" ID="scriptexample"',
             'label' => qa_lang_html('plugin_bash/create_script_example'),
+            'value' => @$script['example_data'],
+            'error' => @$script['example_data_error'],
         );
 
-
-
-        if ($edit) {
-            $qa_content['form']['fields'][] = array(
+        if ($mode === $this->EDIT_MODE) {
+            $fields [] = array(
                 'type' => 'blank',
                 'rows' => 1,
             );
-            $qa_content['form']['fields'][] = array(
+            $fields [] = array(
                 'type' => 'TEXT',
                 'rows' => 1,
-                'tags' => 'NAME="message" ID="message"',
+                'tags' => 'NAME="comm_msg" ID="comm_msg"',
                 'label' => qa_lang_html('plugin_bash/edit_script_message'),
+                'value' => @$script['comm_msg'],
+                'error' => @$script['comm_msg_error'],
             );
         }
-
-        $qa_content['focusid'] = 'scriptname';
-
-        return $qa_content;
+        return $fields;
     }
 
-    function validate_scripts($scripts) {
-        foreach ($scripts as $script) {
-            
+    function load_script() {
+        $script['name'] = qa_post_text('scriptname');
+        $script['desc'] = qa_post_text('scriptdesc');
+        $script['tags'] = qa_post_text('scripttags');
+        $script['example_data'] = qa_post_text('scriptexample');
+        $script['comm_msg'] = qa_post_text('comm_msg');
+        $repos = array();
+        $counter = qa_post_text('counter');
+        for ($i = 1; $i < $counter; $i++) {
+            $repos[] = array(
+                'git' => qa_post_text('scriptgit' . $i),
+                'file' => qa_post_text('scriptfile' . $i),
+                'comm' => qa_post_text('scriptcomm' . $i),
+                'order' => $i,
+            );
         }
+        $script['repos'] = $repos;
+        $script['comm_msg'] = qa_post_text('comm_msg');
+        return $script;
     }
 
-    function add_script_fields($scripts) {
+    function add_repo_fields($scripts) {
         $fields = array();
         $counter = 1;
         foreach ($scripts as $script) {
-            $fields = array_merge($fields, $this->add_script_field($script, $counter));
+            $fields = array_merge($fields, $this->add_repo_field($script, $counter));
             $counter++;
             $fields [] = array(
                 'type' => 'blank',
@@ -149,65 +212,41 @@ class qa_bash_create_page {
         return $fields;
     }
 
-    function add_script_field($script, $counter) {
+    function add_repo_field($script, $counter) {
         $fields = array(
             array(
                 'type' => 'text',
                 'rows' => 1,
                 'tags' => 'NAME="scriptgit' . $counter . '" ID="scriptgit' . $counter . '"',
                 'label' => qa_lang_html('plugin_bash/create_script_git'),
-                'value' => $script['git'],
-                'error' => @$script['git_err'],
+                'value' => @$script['git'],
+                'error' => @$script['git_error'],
             ),
             array(
                 'type' => 'text',
                 'rows' => 1,
                 'tags' => 'NAME="scriptfile' . $counter . '" ID="scriptfile' . $counter . '"',
                 'label' => qa_lang_html('plugin_bash/create_script_file'),
-                'value' => $script['file'],
-                'error' => @$script['file_err'],
+                'value' => @$script['file'],
+                'error' => @$script['file_error'],
             ),
             array(
                 'type' => 'text',
                 'rows' => 1,
                 'tags' => 'NAME="scriptcomm' . $counter . '" ID="scriptcomm' . $counter . '"',
                 'label' => qa_lang_html('plugin_bash/create_script_comm'),
-                'value' => $script['comm'],
-                'error' => @$script['comm_err'],
+                'value' => @$script['comm'],
+                'error' => @$script['comm_error'],
             ),
         );
         return $fields;
     }
 
-    function get_buttons() {
-        //return '<input name="dosave" value="Save script" title="" type="submit" class="qa-form-tall-button qa-form-tall-button-0"><input name="dosave" value="Save script" title="" type="submit" class="qa-form-tall-button qa-form-tall-button-0">';
-
+    function get_handle_buttons() {
         return '<button type="button" id="btn-add" onclick="addScript();" class="qa-form-tall-button">'
                 . qa_lang_html('plugin_bash/create_script_add_script') . '</button>'
                 . '<button type="button" id="btn-remove" onclick="removeScript();" class="qa-form-tall-button">'
                 . qa_lang_html('plugin_bash/create_script_remove_script') . '</button>';
     }
 
-//    public function init_queries($table_list) {
-//        $tablename = qa_db_add_table_prefix('script');
-//
-//        if (!in_array($tablename, $table_list)) {
-//            require_once QA_INCLUDE_DIR . 'app/users.php';
-//            require_once QA_INCLUDE_DIR . 'db/maxima.php';
-//
-//            return 'CREATE TABLE ^eventlog (' .
-//                    'datetime DATETIME NOT NULL,' .
-//                    'ipaddress VARCHAR (15) CHARACTER SET ascii,' .
-//                    'userid ' . qa_get_mysql_user_column_type() . ',' .
-//                    'handle VARCHAR(' . QA_DB_MAX_HANDLE_LENGTH . '),' .
-//                    'cookieid BIGINT UNSIGNED,' .
-//                    'event VARCHAR (20) CHARACTER SET ascii NOT NULL,' .
-//                    'params VARCHAR (800) NOT NULL,' .
-//                    'KEY datetime (datetime),' .
-//                    'KEY ipaddress (ipaddress),' .
-//                    'KEY userid (userid),' .
-//                    'KEY event (event)' .
-//                    ') ENGINE=MyISAM DEFAULT CHARSET=utf8';
-//        }
-//    }
 }

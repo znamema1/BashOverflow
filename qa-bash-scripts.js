@@ -58,7 +58,10 @@ function removeScript() {
 }
 
 $(document).ready(function () {
-    if (getCounter() <= 3)
+    if (getCounter() <= 2) {
         $("#btn-remove").addClass("qa-btn-disabled");
+    } else {
+        $("#btn-remove").removeClass("qa-btn-disabled");
+    }
 });
 
