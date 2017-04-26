@@ -152,12 +152,12 @@ function init_db_tables($table_list) {
   `file_path` VARCHAR(400) NOT NULL,
   `comm` VARCHAR(100) NOT NULL,
   `r_order` INT NOT NULL,
-  PRIMARY KEY (`repoid`),
+  PRIMARY KEY (`repoid`)
 );',
         'CREATE TABLE `^stags` (
   `stagid` INT NOT NULL AUTO_INCREMENT,
   `stag` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`stagid`),
+  PRIMARY KEY (`stagid`)
 );',
         'CREATE TABLE `^version_stags` (
   `versionid` INT NOT NULL,
