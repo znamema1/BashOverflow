@@ -43,7 +43,7 @@ class qa_bash_detail_page {
         $qa_content['title'] = qa_html($script['name']);
 
         if (qa_clicked('dorun')) {
-            qa_redirect('run/1', (isset($version) ? array("ver" => $version) : null));
+            qa_redirect('run/'. $scriptid, (isset($version) ? array("ver" => $version) : null));
         }
         if (qa_clicked('doedit')) {
             qa_redirect('edit_script/' . $scriptid);

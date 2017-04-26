@@ -48,5 +48,17 @@ return array(
     'error_script_git_empty' => 'Link to GitHub is mandatory!',
     'error_script_file_empty' => 'File to run is mandatory!',
     'error_script_comm_empty' => 'Commit is mandatory!',
+    'nav_create_script' => 'Create script',
+    'nav_scripts' => 'Scripts',
+    'nav_sub_stag' => 'Script tag',
+    'nav_sub_tags' => 'Questions tags',
+    'nav_sub_stags' => 'Script tags',
+    'nav_sub_tag' => 'Questions tag',
+    'nav_sub_scripts_recent' => 'Recent',
+    'nav_sub_scripts_votes' => 'Most votes',
+    'nav_sub_scripts_runs' => 'Most runs',
+    'nav_sub_scripts_mine' => 'My scripts',
+    'nav_sub_search_question' => 'Search in questions',
+    'nav_sub_search_script' => 'Search in scripts',
 );
 

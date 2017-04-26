@@ -41,6 +41,26 @@ qa_register_plugin_module(
         'qa_bash_list_page', // name of module class
         'List of scripts page' // human-readable name of module
 );
+qa_register_plugin_module(
+        'page', // type of module
+        'qa-bash-stags.php', // PHP file containing module class
+        'qa_bash_stags_page', // name of module class
+        'List of stags page' // human-readable name of module
+);
+
+qa_register_plugin_module(
+        'page', // type of module
+        'qa-bash-stag.php', // PHP file containing module class
+        'qa_bash_stag_page', // name of module class
+        'List of scripts by stag page' // human-readable name of module
+);
+
+qa_register_plugin_module(
+        'page', // type of module
+        'qa-bash-search.php', // PHP file containing module class
+        'qa_bash_search_page', // name of module class
+        'Script search page' // human-readable name of module
+);
 
 qa_register_plugin_phrases(
         'qa-bash-lang-*.php', // pattern for language files
@@ -49,9 +69,12 @@ qa_register_plugin_phrases(
 
 qa_register_plugin_layer(
         'qa-bash-layer.php', // PHP file containing layer
-        'layer hack' // human-readable name of layer
+        'Layer for HTML generation of s-view and s-list' // human-readable name of layer
 );
-
+qa_register_plugin_layer(
+        'qa-bash-nav-layer.php', // PHP file containing layer
+        'Layer for custom navigation' // human-readable name of layer
+);
 qa_register_plugin_module(
         'page', // type of module
         'qa-bash-ajax-create.php', // PHP file containing module class
