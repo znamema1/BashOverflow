@@ -6,3 +6,7 @@
 .qa-nav-main-create_script .qa-nav-main-link:before {
     content: '\e80C';
 }
+
+body{
+    font-family: sans-serif !important;
+}

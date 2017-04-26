@@ -5,7 +5,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
     function doctype() {
         global $qa_request;
 
-        $this->content['css_src'][] = './qa-plugin/bash-overflow/qa-bash-global.css';
+        $this->content['css_src'][] = qa_opt('site_url'). 'qa-plugin/bash-overflow/qa-bash-global.css';
 
         $nav_scripts = array(
             'scripts' => array(
