@@ -5,6 +5,8 @@ class qa_html_theme_layer extends qa_html_theme_base {
     function doctype() {
         global $qa_request;
 
+        $this->content['css_src'][] = './qa-plugin/bash-overflow/qa-bash-global.css';
+
         $nav_scripts = array(
             'scripts' => array(
                 'url' => qa_path_html('scripts'),
@@ -84,16 +86,16 @@ class qa_html_theme_layer extends qa_html_theme_base {
         if ($qa_request == 'search' || $qa_request == 'script_search') {
             $q = @qa_get('q');
             $this->content['navigation']['sub'] = array(
-            'search' => array(
-            'url' => qa_path_html('search', array('q' => $q)),
-            'label' => qa_lang_html('plugin_bash/nav_sub_search_question'),
-            'selected' => $qa_request == 'search',
-            ),
-            'script_search' => array(
-            'url' => qa_path_html('script_search', array('q' => $q)),
-            'label' => qa_lang_html('plugin_bash/nav_sub_search_script'),
-            'selected' => $qa_request == 'script_search',
-            ),
+                'search' => array(
+                    'url' => qa_path_html('search', array('q' => $q)),
+                    'label' => qa_lang_html('plugin_bash/nav_sub_search_question'),
+                    'selected' => $qa_request == 'search',
+                ),
+                'script_search' => array(
+                    'url' => qa_path_html('script_search', array('q' => $q)),
+                    'label' => qa_lang_html('plugin_bash/nav_sub_search_script'),
+                    'selected' => $qa_request == 'script_search',
+                ),
             );
         }
         qa_html_theme_base::doctype();

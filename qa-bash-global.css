@@ -1,0 +1,8 @@
+
+.qa-nav-main-scripts .qa-nav-main-link:before {
+    content: '\e813';
+}
+
+.qa-nav-main-create_script .qa-nav-main-link:before {
+    content: '\e80C';
+}
