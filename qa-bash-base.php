@@ -97,32 +97,66 @@ function get_script($scriptid, $ver = null) {
         }
     }
 
-    $script['name'] = $data['name'];
-    $script['desc'] = $data['description'];
-    $script['tags'] = @$tags;
-    $script['example_data'] = @$data['example'];
-    $script['comm_msg'] = @$data['commitmsg'];
-    $script['repos'] = $repos;
-    $script['author'] = $script['userid'];
-    $script['edit'] = $data['editorid'];
-    $script['create_date'] = 'XXX'; // to delete
-    $script['edit_date'] = $data['created'];
-    $script['score'] = $script['score'];
-    $script['exec_count'] = $script['run_count'];
-    $script['versions'] = range(1, $script['last_version']);
+    $ret['name'] = $data['name'];
+    $ret['desc'] = $data['description'];
+    $ret['tags'] = @$tags;
+    $ret['example_data'] = @$data['example'];
+    $ret['comm_msg'] = @$data['commitmsg'];
+    $ret['repos'] = $repos;
+    $ret['author'] = $script['userid'];
+    $ret['edit'] = $data['editorid'];
+    $ret['create_date'] = 'XXX'; // to delete
+    $ret['edit_date'] = $data['created'];
+    $ret['score'] = $script['score'];
+    $ret['exec_count'] = $script['run_count'];
+    $ret['versions'] = range(1, $script['last_version']);
     if ($ver == null) {
-        $script['selected_version'] = $script['last_version'];
+        $ret['selected_version'] = $script['last_version'];
     } else {
-        $script['selected_version'] = $ver;
+        $ret['selected_version'] = $ver;
     }
-    return $script;
+    return $ret;
 }
 
 function get_popular_tags($start, $count = null) {
-    $result =  get_stags($start, $count);
+    $result = get_stags($start, $count);
     foreach ($result as $value) {
         $ret[$value['stag']] = $value['count'];
     }
+    return $ret;
+}
+
+function get_scripts_by_tag($tag, $start, $count = null) {
+    $result = get_versionid_and_scriptid_by_stag($tag, $start, $count);
+
+    foreach ($result as $script) {
+        $ret[] = get_script_overview($script['scriptid'], $script['versionid']);
+    }
+    return @$ret;
+}
+
+function get_script_overview($scriptid, $versionid) {
+    $script = qa_db_get_script($scriptid);
+    $data = qa_db_get_version_overview($scriptid, $versionid);
+    
+    $stags = qa_db_get_stags($scriptid, $versionid);
+
+    if (!empty($stags[0]['stag'])) {
+        foreach ($stags as $value) {
+            $tags[] = $value['stag'];
+        }
+    }
+
+    $ret['score'] = $script['score'];
+    $ret['score_label'] = qa_lang_html_sub_split('main/x_votes', '')['suffix'];
+    $ret['exec_count'] = $script['run_count'];
+    $ret['exec_label'] = qa_lang_html('plugin_bash/detail_script_exec_label');
+    $ret['title'] = $data['name'];
+    $ret['url'] = qa_path_html('script/'. $scriptid);
+    $ret['tags'] = @$tags;
+    $ret['what'] = 'created';
+    $ret['when'] = '2 minutes ago';
+    $ret['who'] = 'by martin';
     return $ret;
 }
 

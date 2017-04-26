@@ -73,6 +73,12 @@ function qa_db_get_version($scriptid, $versionid) {
     return qa_db_read_one_assoc($result, true);
 }
 
+function qa_db_get_version_overview($scriptid, $versionid) {
+    $result = qa_db_query_sub('SELECT name , `created`, `editorid` FROM'
+            . ' `^versions` WHERE `scriptid` =$ AND `versionid` = $', $scriptid, $versionid);
+    return qa_db_read_one_assoc($result, true);
+}
+
 function qa_db_get_stags($scriptid, $versionid) {
     $result = qa_db_query_sub('SELECT stag FROM ^version_stags JOIN ^stags ON'
             . ' ^version_stags.stagid = ^stags.stagid WHERE'
@@ -96,6 +102,13 @@ function get_stags($start, $count) {
     $result = qa_db_query_sub('SELECT s.stag, T.count '
             . 'FROM qa_stags s JOIN (SELECT X.stagid, COUNT(*) count FROM (Select v.stagid FROM qa_scripts s JOIN qa_version_stags v ON s.scriptid = v.scriptid AND s.last_version = v.versionid) AS X GROUP BY stagid) AS T ON s.stagid = T.stagid '
             . 'ORDER BY T.count DESC LIMIT #,#', $start, $count);
+    return qa_db_read_all_assoc($result);
+}
+
+function get_versionid_and_scriptid_by_stag($stag, $start, $count) {
+    $result = qa_db_query_sub('SELECT X.versionid, X.scriptid FROM '
+            . 'qa_stags t JOIN (SELECT v.* FROM qa_scripts s JOIN qa_version_stags v ON s.scriptid = v.scriptid AND s.last_version = v.versionid) AS X ON t.stagid = X.stagid JOIN qa_versions vr ON X.versionid = vr.versionid AND X.scriptid = vr.scriptid '
+            . 'WHERE t.stag = $ ORDER BY vr.created DESC LIMIT #,#', $stag, $start, $count);
     return qa_db_read_all_assoc($result);
 }
 

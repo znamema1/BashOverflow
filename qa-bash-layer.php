@@ -127,14 +127,20 @@ class qa_html_theme_layer extends qa_html_theme_base {
     }
 
     function s_list($s_list) {
+        if (isset($s_list['title'])) {
+            $this->part_title($s_list);
+        }
+
         $this->output('<div class="qa-q-list qa-q-list-vote-disabled">');
         $this->s_list_items($s_list);
         $this->output('</div> <!-- END qa-q-list -->', '');
     }
 
     function s_list_items($s_list) {
-        foreach ($s_list as $s_item) {
-            $this->s_list_item($s_item);
+        if (!empty($s_list['items'])) {
+            foreach ($s_list['items'] as $s_item) {
+                $this->s_list_item($s_item);
+            }
         }
     }
 
