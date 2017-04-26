@@ -127,6 +127,13 @@ function db_get_scripts() {
     return qa_db_read_all_assoc($result);
 }
 
+function get_scripts_by_q($q, $start, $count) {
+    $result = qa_db_query_sub('Select s.scriptid, v.versionid  FROM '
+            . 'qa_scripts s JOIN qa_versions v ON s.scriptid = v.scriptid AND s.last_version = v.versionid '
+            . 'WHERE v.name LIKE $ OR v.description LIKE $ LIMIT #,#', '%'.$q.'%', '%'.$q.'%', $start, $count);
+    return qa_db_read_all_assoc($result);
+}
+
 function init_db_tables($table_list) {
     if (in_array('qa_scripts', $table_list)) {
         return null;

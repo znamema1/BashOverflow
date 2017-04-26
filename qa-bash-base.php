@@ -190,6 +190,15 @@ function get_script_overview($scriptid, $versionid) {
     return $ret;
 }
 
+function search_scripts($q, $start, $count) {
+    $result = get_scripts_by_q($q, $start, $count);
+
+    foreach ($result as $script) {
+        $ret[] = get_script_overview($script['scriptid'], $script['versionid']);
+    }
+    return @$ret;
+}
+
 /*
   function get_scripts_by_tag($tag, $start = 0) {
   $scripts = db_getscripts_versions_by_tag($tag, $start);

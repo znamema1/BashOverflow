@@ -35,6 +35,8 @@ return array(
     'detail_script_public_button' => 'Publish script',
     'detail_script_private_button' => 'Hide script for everyone except me',
     'detail_script_no_script_error' => 'Script doesn\'t exist!',
+    'search_title_x' => 'Search scripts for ^',
+    'search_title_no_x' => 'No scripts found for ^',
     'stags_title' => 'Most popular script tags',
     'stags_title_no' => 'No tags found',
     'stags_suggest' => 'Help get things started by ^1creating a script^2.',
