@@ -112,6 +112,21 @@ function get_versionid_and_scriptid_by_stag($stag, $start, $count) {
     return qa_db_read_all_assoc($result);
 }
 
+function db_get_scripts_by_sort($sort, $start, $count) {
+    $result = qa_db_query_sub('SELECT * FROM qa_scripts ORDER BY ' . $sort . ' DESC LIMIT #,#', $start, $count);
+    return qa_db_read_all_assoc($result);
+}
+
+function db_get_my_scripts($userid) {
+    $result = qa_db_query_sub('SELECT * FROM qa_scripts WHERE userid = #', $userid);
+    return qa_db_read_all_assoc($result);
+}
+
+function db_get_scripts() {
+    $result = qa_db_query_sub('SELECT * FROM qa_scripts;');
+    return qa_db_read_all_assoc($result);
+}
+
 function init_db_tables($table_list) {
     if (in_array('qa_scripts', $table_list)) {
         return null;
@@ -121,73 +136,97 @@ function init_db_tables($table_list) {
 
     return array(
         'CREATE TABLE `^scripts` (
-  `scriptid` INT NOT NULL AUTO_INCREMENT,
-  `userid` ' . qa_get_mysql_user_column_type() . ' NOT NULL,
-  `last_version` INT NULL,
-  `score` INT NOT NULL DEFAULT 0,
-  `run_count` INT NOT NULL DEFAULT 0,
-  `accessibility` CHAR(1) NOT NULL,
-  PRIMARY KEY (`scriptid`)
-);',
+    `scriptid` INT NOT NULL AUTO_INCREMENT,
+    `userid` ' . qa_get_mysql_user_column_type() . ' NOT NULL,
+    `last_version` INT NULL,
+    `score` INT NOT NULL DEFAULT 0,
+    `run_count` INT NOT NULL DEFAULT 0,
+    `accessibility` CHAR(1) NOT NULL,
+    PRIMARY KEY (`scriptid`)
+    );
+    ',
         'CREATE TABLE `^versions` (
-  `versionid` INT NOT NULL AUTO_INCREMENT,
-  `scriptid` INT NOT NULL,
-  `created` DATETIME NOT NULL,
-  `editorid` INT(10) UNSIGNED NOT NULL,
-  `description` VARCHAR(3000) NOT NULL,
-  `example` VARCHAR(500) NOT NULL,
-  `commitmsg` VARCHAR(150) NULL,
-  `name` VARCHAR(150) NOT NULL,
-  PRIMARY KEY (`versionid`, `scriptid`)
-);',
+    `versionid` INT NOT NULL AUTO_INCREMENT,
+    `scriptid` INT NOT NULL,
+    `created` DATETIME NOT NULL,
+    `editorid` INT(10) UNSIGNED NOT NULL,
+    `description` VARCHAR(3000) NOT NULL,
+    `example` VARCHAR(500) NOT NULL,
+    `commitmsg` VARCHAR(150) NULL,
+    `name` VARCHAR(150) NOT NULL,
+    PRIMARY KEY (`versionid`, `scriptid`)
+    );
+    ',
         'CREATE TABLE `^svotes` (
-  `userid` ' . qa_get_mysql_user_column_type() . ' NOT NULL,
-  `scriptid` INT NOT NULL,
-  `vote` TINYINT NOT NULL,
-  PRIMARY KEY (`userid`, `scriptid`)
-);',
+    `userid` ' . qa_get_mysql_user_column_type() . ' NOT NULL,
+    `scriptid` INT NOT NULL,
+    `vote` TINYINT NOT NULL,
+    PRIMARY KEY (`userid`, `scriptid`)
+    );
+    ',
         'CREATE TABLE `^repos` (
-  `repoid` INT NOT NULL AUTO_INCREMENT,
-  `git` VARCHAR(300) NOT NULL,
-  `file_path` VARCHAR(400) NOT NULL,
-  `comm` VARCHAR(100) NOT NULL,
-  `r_order` INT NOT NULL,
-  PRIMARY KEY (`repoid`)
-);',
+    `repoid` INT NOT NULL AUTO_INCREMENT,
+    `git` VARCHAR(300) NOT NULL,
+    `file_path` VARCHAR(400) NOT NULL,
+    `comm` VARCHAR(100) NOT NULL,
+    `r_order` INT NOT NULL,
+    PRIMARY KEY (`repoid`)
+    );
+    ',
         'CREATE TABLE `^stags` (
-  `stagid` INT NOT NULL AUTO_INCREMENT,
-  `stag` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`stagid`)
-);',
+    `stagid` INT NOT NULL AUTO_INCREMENT,
+    `stag` VARCHAR(100) NOT NULL,
+    PRIMARY KEY (`stagid`)
+    );
+    ',
         'CREATE TABLE `^version_stags` (
-  `versionid` INT NOT NULL,
-  `scriptid` INT NOT NULL,
-  `stagid` INT NOT NULL,
-  PRIMARY KEY (`versionid`, `scriptid`, `stagid`)
-);',
+    `versionid` INT NOT NULL,
+    `scriptid` INT NOT NULL,
+    `stagid` INT NOT NULL,
+    PRIMARY KEY (`versionid`, `scriptid`, `stagid`)
+    );
+    ',
         'CREATE TABLE `^version_repos` (
-  `scriptid` INT NOT NULL,
-  `versionid` INT NOT NULL,
-  `repoid` INT NOT NULL,
-  PRIMARY KEY (`scriptid`, `versionid`, `repoid`)
-);',
-        'ALTER TABLE `^scripts` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        'ALTER TABLE `^versions`ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        'ALTER TABLE `^svotes` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        'ALTER TABLE `^repos` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        'ALTER TABLE `^stags` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        'ALTER TABLE `^version_stags` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        'ALTER TABLE `^version_repos` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        'ALTER TABLE `^scripts` ADD FOREIGN KEY (userid) REFERENCES `^users` (`userid`);',
-        'ALTER TABLE `^versions`ADD FOREIGN KEY (scriptid) REFERENCES `^scripts` (`scriptid`);',
-        'ALTER TABLE `^versions`ADD FOREIGN KEY (editorid) REFERENCES `^users` (`userid`);',
-        'ALTER TABLE `^svotes` ADD FOREIGN KEY (userid) REFERENCES `^users` (`userid`);',
-        'ALTER TABLE `^svotes` ADD FOREIGN KEY (scriptid) REFERENCES `^scripts` (`scriptid`);',
-        'ALTER TABLE `^version_stags` ADD FOREIGN KEY (versionid) REFERENCES ^versions (versionid);',
-        'ALTER TABLE `^version_stags` ADD FOREIGN KEY (scriptid) REFERENCES ^versions (scriptid);',
-        'ALTER TABLE `^version_stags` ADD FOREIGN KEY (stagid) REFERENCES `^stags` (`stagid`);',
-        'ALTER TABLE `^version_repos` ADD FOREIGN KEY (versionid) REFERENCES `^versions`(`versionid`);',
-        'ALTER TABLE `^version_repos` ADD FOREIGN KEY (scriptid) REFERENCES `^versions`(`scriptid`);',
+    `scriptid` INT NOT NULL,
+    `versionid` INT NOT NULL,
+    `repoid` INT NOT NULL,
+    PRIMARY KEY (`scriptid`, `versionid`, `repoid`)
+    );
+    ',
+        'ALTER TABLE `^scripts` ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    ',
+        'ALTER TABLE `^versions`ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    ',
+        'ALTER TABLE `^svotes` ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    ',
+        'ALTER TABLE `^repos` ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    ',
+        'ALTER TABLE `^stags` ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    ',
+        'ALTER TABLE `^version_stags` ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    ',
+        'ALTER TABLE `^version_repos` ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    ',
+        'ALTER TABLE `^scripts` ADD FOREIGN KEY (userid) REFERENCES `^users` (`userid`);
+    ',
+        'ALTER TABLE `^versions`ADD FOREIGN KEY (scriptid) REFERENCES `^scripts` (`scriptid`);
+    ',
+        'ALTER TABLE `^versions`ADD FOREIGN KEY (editorid) REFERENCES `^users` (`userid`);
+    ',
+        'ALTER TABLE `^svotes` ADD FOREIGN KEY (userid) REFERENCES `^users` (`userid`);
+    ',
+        'ALTER TABLE `^svotes` ADD FOREIGN KEY (scriptid) REFERENCES `^scripts` (`scriptid`);
+    ',
+        'ALTER TABLE `^version_stags` ADD FOREIGN KEY (versionid) REFERENCES ^ versions(versionid);
+    ',
+        'ALTER TABLE `^version_stags` ADD FOREIGN KEY (scriptid) REFERENCES ^ versions(scriptid);
+    ',
+        'ALTER TABLE `^version_stags` ADD FOREIGN KEY (stagid) REFERENCES `^stags` (`stagid`);
+    ',
+        'ALTER TABLE `^version_repos` ADD FOREIGN KEY (versionid) REFERENCES `^versions`(`versionid`);
+    ',
+        'ALTER TABLE `^version_repos` ADD FOREIGN KEY (scriptid) REFERENCES `^versions`(`scriptid`);
+    ',
         'ALTER TABLE `^version_repos` ADD FOREIGN KEY (repoid) REFERENCES `^repos` (`repoid`)'
     );
 }

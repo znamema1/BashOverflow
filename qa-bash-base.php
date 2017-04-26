@@ -135,10 +135,39 @@ function get_scripts_by_tag($tag, $start, $count = null) {
     return @$ret;
 }
 
+function get_scripts_by_sort($sort, $start, $count = null) {
+    $result = db_get_scripts_by_sort($sort, $start, $count);
+    foreach ($result as $script) {
+        $ret[] = get_script_overview($script['scriptid'], $script['last_version']);
+    }
+    return @$ret;
+}
+
+function get_scripts_by_date($is_mine, $start, $count = null) {
+    $userid = qa_get_logged_in_userid();
+    if ($is_mine) {
+        if (!isset($userid)) {
+            return;
+        }
+
+        $result = db_get_my_scripts($userid);
+    } else {
+        $result = db_get_scripts();
+    }
+    foreach ($result as $script) {
+        $ret[] = get_script_overview($script['scriptid'], $script['last_version']);
+    }
+    if (isset($ret)) {
+        qa_sort_by($ret, 'created');
+        $ret = array_reverse($ret);
+    }
+    return @$ret;
+}
+
 function get_script_overview($scriptid, $versionid) {
     $script = qa_db_get_script($scriptid);
     $data = qa_db_get_version_overview($scriptid, $versionid);
-    
+
     $stags = qa_db_get_stags($scriptid, $versionid);
 
     if (!empty($stags[0]['stag'])) {
@@ -152,10 +181,11 @@ function get_script_overview($scriptid, $versionid) {
     $ret['exec_count'] = $script['run_count'];
     $ret['exec_label'] = qa_lang_html('plugin_bash/detail_script_exec_label');
     $ret['title'] = $data['name'];
-    $ret['url'] = qa_path_html('script/'. $scriptid);
+    $ret['url'] = qa_path_html('script/' . $scriptid);
     $ret['tags'] = @$tags;
     $ret['what'] = 'created';
     $ret['when'] = '2 minutes ago';
+    $ret['created'] = $data['created'];
     $ret['who'] = 'by martin';
     return $ret;
 }
