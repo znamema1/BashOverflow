@@ -35,6 +35,12 @@ return array(
     'detail_script_public_button' => 'Publish script',
     'detail_script_private_button' => 'Hide script for everyone except me',
     'detail_script_no_script_error' => 'Script doesn\'t exist!',
+    'stags_title' => 'Most popular script tags',
+    'stags_title_no' => 'No tags found',
+    'stags_suggest' => 'Help get things started by ^1creating a script^2.',
+    'stag_title_x' => 'Recent scripts tagged ^',
+    'stag_suggest' => 'To see more, click for the ^1full list of scripts^2 or ^3popular script tags^4.',
+    
     'list_script_title' => 'List of scripts',
     'error_script_name' => 'Script name must be 5-40 characters long!',
     'error_script_desc' => 'Script description must be max 400 characters long!',

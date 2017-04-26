@@ -48,7 +48,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
                     'selected' => strpos($qa_request, 'tag') === 0,
                 ),
                 'stag' => array(
-                    'url' => qa_path_html('stags/' . @$parts[1]),
+                    'url' => qa_path_html('stag/' . @$parts[1]),
                     'label' => qa_lang_html('plugin_bash/nav_sub_stag'),
                     'selected' => strpos($qa_request, 'stag') === 0,
                 ),

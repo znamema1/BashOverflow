@@ -87,13 +87,25 @@ function qa_db_get_repos($scriptid, $versionid) {
     return qa_db_read_all_assoc($result);
 }
 
+function get_stag_count() {
+    $result = qa_db_query_sub('SELECT COUNT(stagid) FROM qa_scripts s JOIN qa_version_stags v ON s.scriptid = v.scriptid AND s.last_version = v.versionid;');
+    return qa_db_read_one_value($result);
+}
+
+function get_stags($start, $count) {
+    $result = qa_db_query_sub('SELECT s.stag, T.count '
+            . 'FROM qa_stags s JOIN (SELECT X.stagid, COUNT(*) count FROM (Select v.stagid FROM qa_scripts s JOIN qa_version_stags v ON s.scriptid = v.scriptid AND s.last_version = v.versionid) AS X GROUP BY stagid) AS T ON s.stagid = T.stagid '
+            . 'ORDER BY T.count DESC LIMIT #,#', $start, $count);
+    return qa_db_read_all_assoc($result);
+}
+
 function init_db_tables($table_list) {
     if (in_array('qa_scripts', $table_list)) {
         return null;
     }
 
     require_once QA_INCLUDE_DIR . 'app/users.php';
-    
+
     return array(
         'CREATE TABLE `^scripts` (
   `scriptid` INT NOT NULL AUTO_INCREMENT,
@@ -127,12 +139,12 @@ function init_db_tables($table_list) {
   `file_path` VARCHAR(400) NOT NULL,
   `comm` VARCHAR(100) NOT NULL,
   `r_order` INT NOT NULL,
-  PRIMARY KEY (`repoid`)
+  PRIMARY KEY (`repoid`),
 );',
         'CREATE TABLE `^stags` (
   `stagid` INT NOT NULL AUTO_INCREMENT,
   `stag` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`stagid`)
+  PRIMARY KEY (`stagid`),
 );',
         'CREATE TABLE `^version_stags` (
   `versionid` INT NOT NULL,
@@ -153,7 +165,6 @@ function init_db_tables($table_list) {
         'ALTER TABLE `^stags` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
         'ALTER TABLE `^version_stags` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
         'ALTER TABLE `^version_repos` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;',
-        
         'ALTER TABLE `^scripts` ADD FOREIGN KEY (userid) REFERENCES `^users` (`userid`);',
         'ALTER TABLE `^versions`ADD FOREIGN KEY (scriptid) REFERENCES `^scripts` (`scriptid`);',
         'ALTER TABLE `^versions`ADD FOREIGN KEY (editorid) REFERENCES `^users` (`userid`);',

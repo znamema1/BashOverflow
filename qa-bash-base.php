@@ -118,6 +118,14 @@ function get_script($scriptid, $ver = null) {
     return $script;
 }
 
+function get_popular_tags($start, $count = null) {
+    $result =  get_stags($start, $count);
+    foreach ($result as $value) {
+        $ret[$value['stag']] = $value['count'];
+    }
+    return $ret;
+}
+
 /*
   function get_scripts_by_tag($tag, $start = 0) {
   $scripts = db_getscripts_versions_by_tag($tag, $start);
@@ -150,7 +158,6 @@ function get_script($scriptid, $ver = null) {
 
 function user_add_points_create($userid) {
     $points = 10;
-
     require_once QA_INCLUDE_DIR . 'db/points.php';
 
     db_add_user_points($userid, $points);
