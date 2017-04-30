@@ -9,7 +9,7 @@ const units = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
 
 var running = false;
 
-function runText(script_id) {
+function runText(script_id, waiting_elem) {
     var input = $('#datain').val();
 
     if (input.length == 0) {
@@ -28,7 +28,7 @@ function runText(script_id) {
         error: function (err) {
             alert("Error while sending data!");
         },
-        complete: done
+        complete: prepareDone(waiting_elem)
     });
 
     return true;
@@ -45,7 +45,7 @@ function getNiceSize(fileSize) {
     return fileSize + ' ' + units[i] + 'B';
 }
 
-function runFile(script_id) {
+function runFile(script_id, waiting_elem) {
     var file = $('#filein')[0].files[0]; //Files[0] = 1st file
 
     if (file.type != FILE_TYPE) {
@@ -78,7 +78,7 @@ function runFile(script_id) {
             error: function (err) {
                 alert("Error while sending data!");
             },
-            complete: done
+            complete: prepareDone(waiting_elem)
         });
     };
     reader.onerror = function (event) {
@@ -90,7 +90,7 @@ function runFile(script_id) {
 }
 
 
-function handleInput() {
+function handleInput(elem) {
     if (running) {
         alert("A run is being executed!");
         return;
@@ -106,7 +106,9 @@ function handleInput() {
         runFn = runText;
     }
 
-    if (!runFn(scriptid)) {
+    if (runFn(scriptid, elem)) {
+        qa_show_waiting_after(elem, false);
+    } else {
         running = false;
     }
 }
@@ -121,8 +123,11 @@ function showResult(result) {
     });
 }
 
-function done() {
-    running = false;
+function prepareDone(waiting_elem) {
+    return function(data) {
+        running = false;
+        qa_hide_waiting(waiting_elem);
+    };
 }
 
 $(document).ready(function () {
