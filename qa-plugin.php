@@ -89,11 +89,17 @@ qa_register_plugin_module(
         'ajax for run page text' // human-readable name of module
 );
 
-
 qa_register_plugin_module(
         'page', // type of module
         'qa-bash-ajax-run-file.php', // PHP file containing module class
         'qa_bash_ajax_run_page_file', // name of module class
         'ajax for run page file' // human-readable name of module
+);
+
+qa_register_plugin_module(
+        'page', // type of module
+        'qa-bash-ajax-vote.php', // PHP file containing module class
+        'qa_bash_ajax_vote', // name of module class
+        'ajax for voting' // human-readable name of module
 );
 

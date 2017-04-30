@@ -94,7 +94,7 @@ function get_script($scriptid, $ver = null) {
             $tags[] = $value['stag'];
         }
     }
-
+    $ret['scriptid'] = $scriptid;
     $ret['name'] = $data['name'];
     $ret['desc'] = $data['description'];
     $ret['tags'] = @$tags;
@@ -133,7 +133,7 @@ function get_scripts_by_tag($tag, $start, $count = null) {
     return @$ret;
 }
 
-function get_scripts_by_sort($sort, $start, $count = null) {
+function get_scripts_by_sort($sort, $start, $count) {
     $result = db_get_scripts_by_sort($sort, $start, $count);
     foreach ($result as $script) {
         $ret[] = get_script_overview($script['scriptid'], $script['last_version']);
@@ -159,6 +159,8 @@ function get_scripts_by_date($is_mine, $start, $count = null) {
         qa_sort_by($ret, 'created');
         $ret = array_reverse($ret);
     }
+
+    $ret = array_slice($ret, $start, $count);
     return @$ret;
 }
 
@@ -209,9 +211,35 @@ function get_user_info_base($userid) {
     return qa_get_one_user_html($handle);
 }
 
-  function vote_script($script, $vote) {
+function run_script($script) {
+    // api connect
+}
 
-  } */
+function vote_script($userid, $scriptid, $vote) {
+    $old_vote = db_get_user_vote($userid, $scriptid);
+    $value = $vote == 'up' ? 1 : -1;
+    if (isset($old_vote)) {
+        db_remove_vote($userid, $scriptid);
+        db_update_score($scriptid, $value * -1);
+    } else {
+        db_create_vote($userid, $scriptid, $value);
+        db_update_score($scriptid, $value);
+    }
+    return db_get_script_score($scriptid);
+}
+
+function get_user_vote($userid, $scriptid) {
+    $vote = db_get_user_vote($userid, $scriptid);
+    if (!isset($vote)) {
+        return null;
+    } else {
+        if ($vote > 0) {
+            return 'up';
+        } else {
+            return 'down';
+        }
+    }
+}
 
 function user_add_points_create($userid) {
     $points = 10;

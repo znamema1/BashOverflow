@@ -57,7 +57,7 @@ class qa_bash_run_page {
 //                echo "$line<br>";
 //            }
         }
-        $qa_content['s_view'] = generate_s_view_content($script, true);
+        $qa_content['s_view'] = generate_s_view_content($script);
 
         $qa_content['form'] = array(
             'tags' => 'METHOD="POST" ACTION="' . qa_self_html() . '" enctype="multipart/form-data"',

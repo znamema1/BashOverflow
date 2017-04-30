@@ -75,5 +75,7 @@ return array(
     'nav_sub_scripts_mine' => 'My scripts',
     'nav_sub_search_question' => 'Search in questions',
     'nav_sub_search_script' => 'Search in scripts',
+    'vote_owner_error' => 'You cannot vote on your own script',
+    'vote_nouser_error' => 'You must login to vote',
 );
 

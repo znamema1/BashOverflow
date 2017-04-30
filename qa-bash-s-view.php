@@ -1,6 +1,6 @@
 <?php
 
-function generate_s_view_content($script, $voting = false) {
+function generate_s_view_content($script) {
     $authorinfo = qa_db_single_select(qa_db_user_account_selectspec($script['author'], true));
     $editorinfo = qa_db_single_select(qa_db_user_account_selectspec($script['editor'], true));
 
@@ -19,11 +19,45 @@ function generate_s_view_content($script, $voting = false) {
     $s_view['versions'] = $script['versions'];
     $s_view['selected_version'] = $script['selected_version'];
 
-    if ($voting) {
+    set_vote_buttons($s_view, $script['scriptid'], $script['author']);
+
+    return $s_view;
+}
+
+function set_vote_buttons(&$s_view, $scriptid, $authorid) {
+    $userid = qa_get_logged_in_userid();
+    if (!isset($userid)) {
+        $s_view['vote_up'] = qa_lang_html('plugin_bash/vote_nouser_error');
+        $s_view['vote_down'] = qa_lang_html('plugin_bash/vote_nouser_error');
+        $s_view['state'] = 'nouser';
+        return;
+    }
+
+    if ($userid == $authorid) {
+        $s_view['vote_up'] = qa_lang_html('plugin_bash/vote_owner_error');
+        $s_view['vote_down'] = qa_lang_html('plugin_bash/vote_owner_error');
+        $s_view['state'] = 'owner';
+        return;
+    }
+
+    require_once 'qa-bash-base.php';
+    $vote = get_user_vote($userid, $scriptid);
+
+    if (!isset($vote)) {
         $s_view['vote_up'] = qa_lang_html('main/vote_up_popup');
         $s_view['vote_down'] = qa_lang_html('main/vote_down_popup');
+        $s_view['state'] = 'novote';
+        return;
     }
-    return $s_view;
+    if ($vote == 'up') {
+        $s_view['vote_up'] = qa_lang_html('main/voted_up_popup');
+        $s_view['state'] = 'up';
+        return;
+    } else {
+        $s_view['vote_down'] = qa_lang_html('main/voted_down_popup');
+        $s_view['state'] = 'down';
+        return;
+    }
 }
 
 function get_user_info($userid) {

@@ -22,26 +22,46 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_stats($s_view, $class) {
         $this->output('<div class="' . $class . '-stats">');
-        $this->s_voting($s_view);
+        $this->s_voting($s_view, $class);
         $this->s_exec_count($s_view);
         $this->output('</div>');
     }
 
-    function s_voting($s_view) {
+    function s_voting($s_view, $class) {
         $this->output('<div class="qa-voting qa-voting-net">');
-        $this->s_vote_buttons($s_view);
+        if ($class != 'qa-q-item') {
+            $this->s_vote_buttons($s_view);
+        }
         $this->s_vote_count($s_view);
         $this->vote_clear();
         $this->output('</div>');
     }
 
     function s_vote_buttons($s_view) {
-        if (isset($s_view['vote_up']) && isset($s_view['vote_down'])) {
-            $this->output('<div class="qa-vote-buttons qa-vote-buttons-net">');
-            $this->output('<input title="' . $s_view['vote_up'] . '" name="vote_up" onclick="return qa_vote_click(this);" type="submit" value="+" class="qa-vote-first-button qa-vote-up-button"> ');
-            $this->output('<input title="' . $s_view['vote_down'] . '" name="vote_down" onclick="return qa_vote_click(this);" type="submit" value="–" class="qa-vote-second-button qa-vote-down-button"> ');
-            $this->output('</div>');
+        $this->output('<div class="qa-vote-buttons qa-vote-buttons-net">');
+        switch ($s_view['state']) {
+            case 'novote': {
+                    $this->output('<input title="' . $s_view['vote_up'] . '" name="vote_up" onclick="handleVote(\'up\');" type="button" value="+" class="qa-vote-first-button qa-vote-up-button"> ');
+                    $this->output('<input title="' . $s_view['vote_down'] . '" name="vote_down" onclick="handleVote(\'down\');" type="button" value="–" class="qa-vote-second-button qa-vote-down-button"> ');
+                    break;
+                }
+            case 'up': {
+                    $this->output('<input title="' . $s_view['vote_up'] . '" name="vote_up" onclick="handleVote(\'up\');" type="button" value="+" class="qa-vote-one-button qa-voted-up-button"> ');
+                    break;
+                }
+            case 'down': {
+                    $this->output('<input title="' . $s_view['vote_down'] . '" name="vote_down" onclick="handleVote(\'down\');" type="button" value="–" class="qa-vote-one-button qa-voted-down-button"> ');
+                    break;
+                }
+            case 'nouser':
+            case 'owner':
+            default: {
+                    $this->output('<input title="' . $s_view['vote_up'] . '" name="vote_up" type="button" value="+" class="qa-vote-first-button qa-vote-up-disabled"> ');
+                    $this->output('<input title="' . $s_view['vote_down'] . '" name="vote_down" type="button" value="–" class="qa-vote-second-button qa-vote-down-disabled"> ');
+                    break;
+                }
         }
+        $this->output('</div>');
     }
 
     function s_vote_count($s_view) {

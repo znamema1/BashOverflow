@@ -62,7 +62,7 @@ function qa_db_set_script_last_version($scriptid, $versionid) {
 }
 
 function qa_db_get_script($scriptid) {
-    $result = qa_db_query_sub('SELECT scriptid, userid, last_version, score, run_count, accessibility FROM'
+    $result = qa_db_query_sub('SELECT scriptid, userid, last_version, score, run_count, accessibility  FROM'
             . '  ^scripts WHERE scriptid = $', $scriptid);
     return qa_db_read_one_assoc($result, true);
 }
@@ -130,8 +130,34 @@ function db_get_scripts() {
 function get_scripts_by_q($q, $start, $count) {
     $result = qa_db_query_sub('Select s.scriptid, v.versionid  FROM '
             . 'qa_scripts s JOIN qa_versions v ON s.scriptid = v.scriptid AND s.last_version = v.versionid '
-            . 'WHERE v.name LIKE $ OR v.description LIKE $ LIMIT #,#', '%'.$q.'%', '%'.$q.'%', $start, $count);
+            . 'WHERE v.name LIKE $ OR v.description LIKE $ LIMIT #,#', '%' . $q . '%', '%' . $q . '%', $start, $count);
     return qa_db_read_all_assoc($result);
+}
+
+function db_get_user_vote($userid, $scriptid) {
+    $result = qa_db_query_sub('SELECT vote FROM qa_svotes '
+            . 'WHERE userid = # AND scriptid = #', $userid, $scriptid);
+    return qa_db_read_one_value($result, true);
+}
+
+function db_remove_vote($userid, $scriptid) {
+    qa_db_query_sub('DELETE FROM qa_svotes '
+            . 'WHERE userid = # AND scriptid = #', $userid, $scriptid);
+}
+
+function db_create_vote($userid, $scriptid, $value) {
+    qa_db_query_sub('INSERT INTO `qa_svotes`(`userid`, `scriptid`, `vote`) '
+            . 'VALUES (#,#,#)', $userid, $scriptid, $value);
+}
+
+function db_get_script_score($scriptid) {
+    $result = qa_db_query_sub('SELECT score FROM qa_scripts '
+            . 'WHERE scriptid = #', $scriptid);
+    return qa_db_read_one_value($result);
+}
+
+function db_update_score($scriptid, $value) {
+    qa_db_query_sub('UPDATE ^scripts SET `score` = `score` + # WHERE scriptid = #', $value, $scriptid);
 }
 
 function init_db_tables($table_list) {
