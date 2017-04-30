@@ -8,11 +8,10 @@ class qa_bash_ajax_run_page_text {
     }
 
     function process_request($request) {
-        $qa_post_text = qa_post_text('scriptid');
-        $qa_post_text0 = qa_post_text('datain');
+        $script_id = qa_post_text('scriptid');
+        $data_in = qa_post_text('datain');
         
-        echo '<div class="qa-part-form2">
-                    <form method="POST" action="../run/16">
+        echo '<form method="POST">
                             <table class="qa-form-tall-table">
                                     <tbody><tr>
                                             <td class="qa-form-tall-label">
@@ -21,12 +20,13 @@ class qa_bash_ajax_run_page_text {
                                     </tr>
                                     <tr>
                                             <td class="qa-form-tall-data">
-                                                    <textarea name="dataout" id="dataout" rows="10" cols="40" class="qa-form-tall-text">'.$qa_post_text0.'</textarea>
+                                                    <textarea name="dataout" id="dataout" rows="10" cols="40" class="qa-form-tall-text" readonly>Script ID: '.$script_id.'
+Data in: '.$data_in.'</textarea>
                                             </td>
                                     </tr>
                                     <tr>
                                             <td class="qa-form-tall-label">
-                                                    Don\'t forget to vote this script! '.$qa_post_text.'
+                                                    Don\'t forget to vote this script!
                                             </td>
                                     </tr>
                                     <tr>
@@ -35,8 +35,7 @@ class qa_bash_ajax_run_page_text {
                                             </td>
                                     </tr>
                             </tbody></table>
-                    </form>
-            </div>';
+                    </form>';
         return null;
     }
 
