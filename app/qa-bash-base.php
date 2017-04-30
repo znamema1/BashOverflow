@@ -133,6 +133,13 @@ function get_scripts_by_tag($tag, $start, $count = null) {
     return @$ret;
 }
 
+function get_count_all_scripts() {
+    return db_get_count_all_scripts();
+}
+function get_count_all_my_scripts($userid) {
+    return db_get_count_all_my_scripts($userid);
+}
+
 function get_scripts_by_sort($sort, $start, $count) {
     $result = db_get_scripts_by_sort($sort, $start, $count);
     foreach ($result as $script) {
@@ -141,7 +148,7 @@ function get_scripts_by_sort($sort, $start, $count) {
     return @$ret;
 }
 
-function get_scripts_by_date($is_mine, $start, $count = null) {
+function get_scripts_by_date($is_mine, $start, $count) {
     $userid = qa_get_logged_in_userid();
     if ($is_mine) {
         if (!isset($userid)) {

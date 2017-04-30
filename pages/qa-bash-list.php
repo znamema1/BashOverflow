@@ -20,11 +20,13 @@ class qa_bash_list_page {
             case 'votes': {
                     $selectsort = 'score';
                     $qa_content['title'] = qa_lang_html('plugin_bash/list_script_title_vote');
+                    $count = get_count_all_scripts();
                     break;
                 }
             case 'runs': {
                     $selectsort = 'run_count';
                     $qa_content['title'] = qa_lang_html('plugin_bash/list_script_title_run');
+                    $count = get_count_all_scripts();
                     break;
                 }
             case 'mine': {
@@ -33,10 +35,12 @@ class qa_bash_list_page {
                         $qa_content['error'] = qa_insert_login_links(qa_lang_html('plugin_bash/list_script_error_my'));
                         return $qa_content;
                     }
+                    $count = get_count_all_my_scripts($userid);
                     break;
                 }
             default: {
                     $qa_content['title'] = qa_lang_html('plugin_bash/list_script_title_recent');
+                    $count = get_count_all_scripts();
                     break;
                 }
         }
@@ -50,7 +54,8 @@ class qa_bash_list_page {
         if (!count($scripts)) {
             $qa_content['title'] = qa_lang_html('plugin_bash/list_script_title_no');
         }
-        $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, count($scripts), qa_opt('pages_prev_next'));
+
+        $qa_content['page_links'] = qa_html_page_links($request, $start, $pagesize, $count, qa_opt('pages_prev_next'), isset($sort) ? array('sort' => $sort) : null);
 
         if (empty($qa_content['page_links'])) {
             $qa_content['suggest_next'] = $this->suggest_html();

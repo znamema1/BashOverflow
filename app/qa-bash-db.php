@@ -93,6 +93,16 @@ function qa_db_get_repos($scriptid, $versionid) {
     return qa_db_read_all_assoc($result);
 }
 
+function db_get_count_all_scripts() {
+    $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM qa_scripts');
+    return qa_db_read_one_value($result);
+}
+
+function db_get_count_all_my_scripts($userid) {
+    $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM qa_scripts WHERE userid = #', $userid);
+    return qa_db_read_one_value($result);
+}
+
 function get_stag_count() {
     $result = qa_db_query_sub('SELECT COUNT(DISTINCT(v.stagid)) FROM qa_scripts s JOIN qa_version_stags v ON s.scriptid = v.scriptid AND s.last_version = v.versionid');
     return qa_db_read_one_value($result);
