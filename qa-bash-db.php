@@ -68,13 +68,13 @@ function qa_db_get_script($scriptid) {
 }
 
 function qa_db_get_version($scriptid, $versionid) {
-    $result = qa_db_query_sub('SELECT name ,`versionid`, `scriptid`, `created`, `editorid`, `description`, `example`, `commitmsg` FROM'
+    $result = qa_db_query_sub('SELECT name ,`versionid`, `scriptid`, UNIX_TIMESTAMP(created) AS created, `editorid`, `description`, `example`, `commitmsg` FROM'
             . ' `^versions` WHERE `scriptid` =$ AND `versionid` = $', $scriptid, $versionid);
     return qa_db_read_one_assoc($result, true);
 }
 
 function qa_db_get_version_overview($scriptid, $versionid) {
-    $result = qa_db_query_sub('SELECT name , `created`, `editorid` FROM'
+    $result = qa_db_query_sub('SELECT name , UNIX_TIMESTAMP(created) AS created, `editorid` FROM'
             . ' `^versions` WHERE `scriptid` =$ AND `versionid` = $', $scriptid, $versionid);
     return qa_db_read_one_assoc($result, true);
 }
