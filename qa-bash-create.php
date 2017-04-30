@@ -25,8 +25,19 @@ class qa_bash_create_page {
         require_once $this->directory . 'qa-bash-base.php';
         $parts = explode('/', $request);
         $mode = $parts[0];
+        $userid = qa_get_logged_in_userid();
 
         $qa_content = qa_content_prepare();
+        if (!isset($userid)) {
+            if ($mode === $this->EDIT_MODE) {
+                $qa_content['error'] = qa_insert_login_links(qa_lang_html('plugin_bash/edit_script_userid_error'));
+            } else {
+                $qa_content['error'] = qa_insert_login_links(qa_lang_html('plugin_bash/create_script_userid_error'));
+            }
+            return $qa_content;
+        }
+
+
         $qa_content['script_src'][] = $this->urltoroot . 'qa-bash-scripts.js';
         $qa_content['css_src'][] = $this->urltoroot . 'qa-bash-scripts.css';
 
