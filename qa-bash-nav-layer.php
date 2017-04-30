@@ -5,7 +5,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
     function doctype() {
         global $qa_request;
 
-        $this->content['css_src'][] = qa_opt('site_url'). 'qa-plugin/bash-overflow/qa-bash-global.css';
+        $this->content['css_src'][] = 'https://fonts.googleapis.com/css?family=Roboto';
+        $this->content['css_src'][] = qa_path_html('/qa-plugin/bash-overflow/qa-bash-global.css');
+        
 
         $nav_scripts = array(
             'scripts' => array(
@@ -98,6 +100,10 @@ class qa_html_theme_layer extends qa_html_theme_base {
                 ),
             );
         }
+        if ($qa_request == 'create_script'){
+            $this->content['navigation']['main']['create_script']['selected'] = 1;
+        }
+        
         qa_html_theme_base::doctype();
     }
 
