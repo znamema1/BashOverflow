@@ -18,10 +18,10 @@ function runText(script_id, waiting_elem) {
     }
 
     $.ajax({
-        url: qa_root + 'ajax_run_page_text',
+        url: qa_root + 'ajax_run_page_text/' + script_id,
         type: 'POST',
         data: {
-            scriptid: script_id,
+//            scriptid: script_id,
             datain: input
         },
         success: showResult,
@@ -62,16 +62,16 @@ function runFile(script_id, waiting_elem) {
     reader.readAsText(file, 'UTF-8');
     reader.onload = function (event) {
         $.ajax({
-            url: qa_root + 'ajax_run_page_file',
+            url: qa_root + 'ajax_run_page_file/' + script_id,
             type: 'POST',
             data: {
-                scriptid: script_id,
+//                scriptid: script_id,
                 fileName: file.name,
                 content: event.target.result
             },
             success: function (data) {
                 showResult(data);
-                $('#output').promise().done(function() {
+                $('#output').promise().done(function () {
                     $('#outputdl')[0].click();
                 });
             },
@@ -117,14 +117,14 @@ function showResult(result) {
     var $content = $(result);
     var $output = $('#output');
 
-    $output.fadeOut(ANIM_DUR, function() {
+    $output.fadeOut(ANIM_DUR, function () {
         $output.html($content);
         $output.fadeIn(ANIM_DUR);
     });
 }
 
 function prepareDone(waiting_elem) {
-    return function(data) {
+    return function (data) {
         running = false;
         qa_hide_waiting(waiting_elem);
     };
@@ -138,7 +138,7 @@ $(document).ready(function () {
     $content = $('<span id="filesize"></span>');
     $('#filein').parent().append($content);
 
-    $('#filein').change(function(e) {
+    $('#filein').change(function (e) {
         var size = "";
         var tooBig = false;
 

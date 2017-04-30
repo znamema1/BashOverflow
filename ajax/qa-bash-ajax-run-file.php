@@ -8,9 +8,11 @@ class qa_bash_ajax_run_page_file {
     }
 
     function process_request($request) {
-        $scriptid = qa_post_text('scriptid');
+        $parts = explode('/', $request);
+        $scriptid = $parts[1];
         $content = qa_post_text('content');
         $name = qa_post_text('fileName');
+        $version_id = qa_get('ver');
 
         echo '<form method="POST">
                             <table class="qa-form-tall-table">
@@ -21,7 +23,7 @@ class qa_bash_ajax_run_page_file {
                                     </tr>
                                     <tr>
                                             <td class="qa-form-tall-data">
-                                                    <textarea name="dataout" id="dataout" rows="10" cols="40" class="qa-form-tall-text" readonly>Script ID: ' . $scriptid . '
+                                                    <textarea name="dataout" id="dataout" rows="10" cols="40" class="qa-form-tall-text" readonly>Script ID: ' . $scriptid .', version ID: '.@$version_id.'
 File name: ' . $name . '
 Content: ' . $content . '</textarea>
                                             </td>
