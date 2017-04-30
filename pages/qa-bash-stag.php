@@ -1,6 +1,6 @@
 <?php
 
-class qa_bash_search_page {
+class qa_bash_stag_page {
 
     private $urltoroot;
     private $directory;
@@ -12,29 +12,27 @@ class qa_bash_search_page {
 
     function match_request($request) {
         $parts = explode('/', $request);
-        return $parts[0] == 'script_search';
+        return $parts[0] == 'stag';
     }
 
     function process_request($request) {
-        require_once 'qa-bash-base.php';
-        $qa_content = qa_content_prepare();
+        require_once __DIR__ . '/../app/qa-bash-base.php';
+        $parts = explode('/', $request);
+        $tag = $parts[1];
         $start = qa_get_start();
-        $q = @qa_get('q');
-
-        if (!strlen($q)) {
-            $qa_content['error'] = qa_lang_html('main/search_explanation');
-            return $qa_content;
+        if (!isset($tag)) {
+            qa_redirect('stags');
         }
-        $qa_content['title'] = qa_lang_html_sub('plugin_bash/search_title_x', $q);
-        $qa_content['search']['value'] = @qa_get('q');
-        $qa_content['search']['form_tags'] = 'method="get" action="./script_search" ';
+
+        $qa_content = qa_content_prepare();
+        $qa_content['title'] = qa_lang_html_sub('plugin_bash/stag_title_x', qa_html($tag));
 
         $pagesize = qa_opt('page_size_tag_qs');
-        $scripts = search_scripts($q, $start, $pagesize);
+        $scripts = get_scripts_by_tag($tag, $start, $pagesize);
 
         $qa_content['s_list']['items'] = $scripts;
         if (!count($scripts)) {
-            $qa_content['title'] = qa_lang_html_sub('plugin_bash/search_title_no_x', $q);
+            $qa_content['s_list']['title'] = qa_lang_html('plugin_bash/stag_title_no');
         }
         $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, count($scripts), qa_opt('pages_prev_next'));
 

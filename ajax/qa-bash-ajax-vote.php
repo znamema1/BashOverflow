@@ -8,7 +8,7 @@ class qa_bash_ajax_vote {
     }
 
     function process_request($request) {
-        require_once 'qa-bash-base.php';
+        require_once __DIR__.'/../app/qa-bash-base.php';
         $scriptid = qa_get('scriptid');
         $vote = qa_get('vote');
         $userid = qa_get_logged_in_userid();
@@ -23,7 +23,7 @@ class qa_bash_ajax_vote {
     }
 
     function get_response($score, $scriptid) {
-        require_once 'qa-bash-s-view.php';
+        require_once __DIR__.'/../app/qa-bash-s-view.php';
 
         set_vote_buttons($s_view, $scriptid, null);
         $s_view['score_label'] = qa_lang_html_sub_split('main/x_votes', '')['suffix'];

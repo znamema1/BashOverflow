@@ -6,7 +6,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
         global $qa_request;
 
         $this->content['css_src'][] = 'https://fonts.googleapis.com/css?family=Roboto';
-        $this->content['css_src'][] = qa_path_html('/qa-plugin/bash-overflow/qa-bash-global.css');
+        $this->content['css_src'][] = qa_path_html('/qa-plugin/bash-overflow/CSS/qa-bash-global.css');
         
 
         $nav_scripts = array(
@@ -22,9 +22,6 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
         $this->content['navigation']['main'] = array_merge($nav_scripts, $this->content['navigation']['main']);
         $this->content['navigation']['main'] = array_merge($this->content['navigation']['main'], $nav_create_script);
-
-
-
 
         if ($qa_request == 'tags' || $qa_request == 'stags') {
             $this->content['navigation']['sub'] = array(

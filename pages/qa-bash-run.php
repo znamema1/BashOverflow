@@ -17,8 +17,8 @@ class qa_bash_run_page {
     }
 
     function process_request($request) {
-        require_once $this->directory . 'qa-bash-base.php';
-        require_once $this->directory . 'qa-bash-s-view.php';
+        require_once __DIR__ . '/../app/qa-bash-base.php';
+        require_once __DIR__ . '/../app/qa-bash-s-view.php';
 
         $parts = explode('/', $request);
         $scriptid = @$parts[1];
@@ -29,8 +29,8 @@ class qa_bash_run_page {
         }
 
         $qa_content = qa_content_prepare();
-        $qa_content['script_src'][] = $this->urltoroot . 'qa-bash-script-run.js';
-        $qa_content['script_src'][] = $this->urltoroot . 'qa-bash-vote.js';
+        $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-run.js';
+        $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-vote.js';
 
         if (!isset($scriptid)) {
             $qa_content['error'] = qa_lang_html('main/page_not_found');

@@ -16,7 +16,7 @@ class qa_bash_stags_page {
     }
 
     function process_request($request) {
-        require_once 'qa-bash-base.php';
+        require_once __DIR__ . '/../app/qa-bash-base.php';
         $start = qa_get_start();
         $populartags = get_popular_tags($start, qa_opt_if_loaded('page_size_tags'));
         

@@ -8,7 +8,7 @@ class qa_bash_list_page {
     }
 
     function process_request($request) {
-        require_once 'qa-bash-base.php';
+        require_once __DIR__ . '/../app/qa-bash-base.php';
         $qa_content = qa_content_prepare();
 
         $start = qa_get_start();
@@ -30,7 +30,7 @@ class qa_bash_list_page {
             case 'mine': {
                     $qa_content['title'] = qa_lang_html('plugin_bash/list_script_title_my');
                     if (!isset($userid)) {
-                        $qa_content['error'] = qa_insert_login_links(qa_lang_html('plugin_bash/list_script_error_my'));//qa_lang_html('plugin_bash/list_script_error_my');
+                        $qa_content['error'] = qa_insert_login_links(qa_lang_html('plugin_bash/list_script_error_my'));
                         return $qa_content;
                     }
                     break;

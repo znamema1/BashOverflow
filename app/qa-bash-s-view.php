@@ -40,7 +40,7 @@ function set_vote_buttons(&$s_view, $scriptid, $authorid) {
         return;
     }
 
-    require_once 'qa-bash-base.php';
+    require_once __DIR__ . './qa-bash-base.php';
     $vote = get_user_vote($userid, $scriptid);
 
     if (!isset($vote)) {

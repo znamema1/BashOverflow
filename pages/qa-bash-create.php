@@ -12,7 +12,7 @@ class qa_bash_create_page {
     }
 
     public function init_queries($table_list) {
-        require_once $this->directory . 'qa-bash-db.php';
+        require_once __DIR__ . '/../app/qa-bash-db.php';
         return init_db_tables($table_list);
     }
 
@@ -22,7 +22,7 @@ class qa_bash_create_page {
     }
 
     function process_request($request) {
-        require_once $this->directory . 'qa-bash-base.php';
+        require_once __DIR__ . '/../app/qa-bash-base.php';
         $parts = explode('/', $request);
         $mode = $parts[0];
         $userid = qa_get_logged_in_userid();
@@ -38,8 +38,8 @@ class qa_bash_create_page {
         }
 
 
-        $qa_content['script_src'][] = $this->urltoroot . 'qa-bash-scripts.js';
-        $qa_content['css_src'][] = $this->urltoroot . 'qa-bash-scripts.css';
+        $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-create.js';
+        $qa_content['css_src'][] = $this->urltoroot . '/CSS/qa-bash-create.css';
 
         if ($mode === $this->EDIT_MODE) {
             $qa_content['title'] = qa_lang_html('plugin_bash/edit_script_title');

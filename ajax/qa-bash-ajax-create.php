@@ -24,7 +24,7 @@ class qa_bash_ajax_create_page {
     }
 
     function generate_array($counter) {
-        require_once 'qa-bash-create.php';
+        require_once __DIR__.'/../pages/qa-bash-create.php';
         $createclass = new qa_bash_create_page();
         return array(
             'style' => 'tall',
