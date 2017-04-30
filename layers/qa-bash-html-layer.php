@@ -65,6 +65,10 @@ class qa_html_theme_layer extends qa_html_theme_base {
     }
 
     function s_vote_count($s_view) {
+        if ($s_view['score'] > 0) {
+            $s_view['score'] = '+' . $s_view['score'];
+        }
+
         $this->output('<div class="qa-vote-count qa-vote-count-net">');
         $this->output('<span class="qa-netvote-count">');
         $this->output('<span class="qa-netvote-count-data">', $s_view['score'], '</span>');
