@@ -274,7 +274,7 @@ function validate_script(&$script, $check_comm_msg) {
 
 function validate_script_name(&$script) {
     $len = strlen($script['name']);
-    if ($len <= 5 || $len > 40) {
+    if ($len < 5 || $len > 40) {
         $script['name_error'] = qa_lang_html('plugin_bash/error_script_name');
         return false;
     }
@@ -291,17 +291,26 @@ function validate_script_desc(&$script) {
 }
 
 function validate_script_tags(&$script) {
-//    $len = strlen($script['tags']);
-//    if ($len > 400) {
-//        $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags');
-//        return false;
-//    }
+    $count = count($script['tags']);
+    if ($count > 5) {
+        $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags_count');
+        return false;
+    }
+    if (count($count)) {
+        foreach ($script['tags'] as $tag) {
+            if (strlen($tag) > 20) {
+                $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags_length');
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
 function validate_script_example_data(&$script) {
     $len = strlen($script['example_data']);
-    if ($len > 400) {
+    if ($len > 300) {
         $script['example_data_error'] = qa_lang_html('plugin_bash/error_script_example_data');
         return false;
     }
@@ -310,7 +319,7 @@ function validate_script_example_data(&$script) {
 
 function validate_script_comm_msg(&$script) {
     $len = strlen($script['comm_msg']);
-    if ($len <= 5 || $len > 100) {
+    if ($len < 5 || $len > 150) {
         $script['comm_msg_error'] = qa_lang_html('plugin_bash/error_script_comm_msg');
         return false;
     }
@@ -332,27 +341,52 @@ function validate_script_repos(&$script) {
 }
 
 function validate_script_repo(&$repo) {
-//    require_once 'qa-bash-api-handler.php';
-//    $parts = explode('/', $repo['git']);
-//    $user = $parts[3];
-//    $repos = $parts[4];
-//        
-//    return check_script($user, $repos, $repo['file'], $repo['comm']);
-//    $repo['git'];
-//    $repo['file'];
-//    $repo['comm'];
     $ret = true;
     if (!isset($repo['git']) || strlen($repo['git']) == 0) {
         $repo['git_error'] = qa_lang_html('plugin_bash/error_script_git_empty');
         $ret = false;
+    } else {
+        $ret &= validate_git($repo);
     }
     if (!isset($repo['file']) || strlen($repo['file']) == 0) {
         $repo['file_error'] = qa_lang_html('plugin_bash/error_script_file_empty');
         $ret = false;
+    } else {
+        $ret &= validate_file($repo);
     }
     if (!isset($repo['comm']) || strlen($repo['comm']) == 0) {
         $repo['comm_error'] = qa_lang_html('plugin_bash/error_script_comm_empty');
         $ret = false;
+    } else {
+        $ret &= validate_comm($repo);
     }
     return $ret;
+}
+
+function validate_git(&$repo) {
+    $regex = '/^https:\/\/github\.com\/\S{1,39}\/\S{1,100}\.git/';
+    if (!preg_match_all($regex, $repo['git']) == 1) {
+        $repo['git_error'] = qa_lang_html('plugin_bash/error_script_git_format');
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function validate_file(&$repo) {
+    $len = strlen($repo['file']);
+    if ($len > 150 || substr($repo['file'], 0, 1) == '.') {
+        $repo['file_error'] = qa_lang_html('plugin_bash/error_script_file_format');
+        return false;
+    }
+    return true;
+}
+
+function validate_comm(&$repo) {
+    $len = strlen($repo['comm']);
+    if ($len < 6 || $len > 40) {
+        $repo['comm_error'] = qa_lang_html('plugin_bash/error_script_comm_format');
+        return false;
+    }
+    return true;
 }
