@@ -134,4 +134,28 @@ $(document).ready(function () {
     var $content = $('<div id="output" style="display: none" class="qa-part-form2"></div>');
     $content.hide();
     $('.qa-main').append($content);
+
+    $content = $('<span id="filesize"></span>');
+    $('#filein').parent().append($content);
+
+    $('#filein').change(function(e) {
+        var size = "";
+        var tooBig = false;
+
+        if (e.target.files.length > 0) {
+            size = getNiceSize(e.target.files[0].size);
+            if (e.target.files[0].size > MAX_FILE_SIZE) {
+                tooBig = true;
+            }
+        }
+
+        var $sizeElem = $('#filesize');
+        $sizeElem.html(size);
+        if (tooBig) {
+            $sizeElem.addClass("qa-error");
+            $sizeElem.attr("title", "The file is too large!");
+        } else {
+            $sizeElem.removeClass("qa-error");
+        }
+    });
 });

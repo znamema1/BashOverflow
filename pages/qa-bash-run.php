@@ -72,7 +72,7 @@ class qa_bash_run_page {
                 ),
                 array(
                     'type' => 'static',
-                    'label' => '<span>' . qa_lang_html('plugin_bash/run_script_label_filein') . ': ' . '</span><input name="filein" id="filein" type="file">',
+                    'label' => '<span>' . qa_lang_html('plugin_bash/run_script_label_filein') . ': ' . '</span><input name="filein" id="filein" type="file" accept="text/plain">',
                 ),
             ),
             'buttons' => array(
