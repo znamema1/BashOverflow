@@ -136,6 +136,7 @@ function get_scripts_by_tag($tag, $start, $count = null) {
 function get_count_all_scripts() {
     return db_get_count_all_scripts();
 }
+
 function get_count_all_my_scripts($userid) {
     return db_get_count_all_my_scripts($userid);
 }
@@ -262,6 +263,24 @@ function user_add_points_edit($userid) {
 
     db_add_user_points($userid, $points);
     qa_db_points_update_ifuser($userid, null);
+}
+
+function lock_script($scriptid, $userid) {
+    $ownerid = db_get_script_owner($scriptid);
+    if ($userid != $ownerid) {
+        return;
+    } else {
+        db_update_script_access($scriptid, 'N');
+    }
+}
+
+function unlock_script($scriptid, $userid) {
+    $ownerid = db_get_script_owner($scriptid);
+    if ($userid != $ownerid) {
+        return;
+    } else {
+        db_update_script_access($scriptid, 'A');
+    }
 }
 
 function validate_script(&$script, $check_comm_msg) {

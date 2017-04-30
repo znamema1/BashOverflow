@@ -24,17 +24,25 @@ class qa_bash_detail_page {
         $version = @qa_get('ver');
         $userid = qa_get_logged_in_userid();
 
-        if (qa_clicked('version')) {
-            qa_redirect($request, array("ver" => qa_post_text('version')));
-        }
-
         $qa_content = qa_content_prepare();
         $qa_content['script_src'][] = $this->urltoroot . 'JS/qa-bash-vote.js';
+        $qa_content['css_src'][] = $this->urltoroot . '/CSS/qa-bash-create.css';
 
         if (!isset($scriptid)) {
             $qa_content['error'] = qa_lang_html('main/page_not_found');
             return $qa_content;
         }
+
+        if (qa_clicked('version')) {
+            qa_redirect($request, array("ver" => qa_post_text('version')));
+        }
+        if (qa_clicked('doprivate')) {
+            lock_script($scriptid, $userid);
+        }
+        if (qa_clicked('dopublic')) {
+            unlock_script($scriptid, $userid);
+        }
+
         $script = get_script($scriptid, $version);
 
         if (!isset($script)) {
@@ -86,6 +94,11 @@ class qa_bash_detail_page {
                 'label' => qa_lang_html('plugin_bash/detail_script_edit_button'),
                 'popup' => qa_lang_html('plugin_bash/detail_script_edit_button'),
             );
+            if (!$script['is_public'] && $userid != $script['author']) {
+                $index = count($qa_content['form2']['buttons']);
+                $qa_content['form2']['buttons'][$index - 1]['tags'] = 'NAME="doedit2" type="button" class="qa-form-tall-button qa-form-tall-button-1 qa-btn-disabled"';
+                $qa_content['form2']['buttons'][$index - 1]['popup'] = qa_lang_html('plugin_bash/detail_script_disabled_edit_button');
+            }
         }
 
         if ($userid == $script['author']) {

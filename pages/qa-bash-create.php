@@ -55,6 +55,12 @@ class qa_bash_create_page {
                 $qa_content['error'] = qa_lang_html('plugin_bash/edit_script_error');
                 return $qa_content;
             }
+
+            if (!$script['is_public'] && $userid != $script['author']) {
+                $qa_content['error'] = qa_lang_html('plugin_bash/edit_script_error_acc');
+                return $qa_content;
+            }
+
             if (!empty($script['tags'])) {
                 $script['tags'] = implode(' ', $script['tags']);
             }

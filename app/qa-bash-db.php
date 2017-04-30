@@ -1,5 +1,14 @@
 <?php
 
+function db_get_script_owner($scriptid) {
+    $result = qa_db_query_sub('SELECT userid FROM ^scripts WHERE scriptid = #', $scriptid);
+    return qa_db_read_one_value($result, true);
+}
+
+function db_update_script_access($scriptid, $acc) {
+    qa_db_query_sub('UPDATE ^scripts SET accessibility = $ WHERE scriptid = #', $acc, $scriptid);
+}
+
 function db_create_script($userid) {
     qa_db_query_sub(
             'INSERT INTO `^scripts`(`userid`, `last_version`, `score`, `run_count`, `accessibility`)'
