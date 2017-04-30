@@ -24,15 +24,20 @@ class qa_bash_stag_page {
             qa_redirect('stags');
         }
 
-
         $qa_content = qa_content_prepare();
         $qa_content['title'] = qa_lang_html_sub('plugin_bash/stag_title_x', qa_html($tag));
-        $qa_content['suggest_next'] = $this->suggest_html();
 
-        $scripts = get_scripts_by_tag($tag, $start, qa_opt_if_loaded('page_size_tag_qs'));
+        $pagesize = qa_opt('page_size_tag_qs');
+        $scripts = get_scripts_by_tag($tag, $start, $pagesize);
+
         $qa_content['s_list']['items'] = $scripts;
         if (!count($scripts)) {
             $qa_content['s_list']['title'] = qa_lang_html('plugin_bash/stag_title_no');
+        }
+        $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, count($scripts), qa_opt('pages_prev_next'));
+
+        if (empty($qa_content['page_links'])) {
+            $qa_content['suggest_next'] = $this->suggest_html();
         }
         return $qa_content;
     }
