@@ -14,8 +14,7 @@ function create_script($script) {
     $scriptid = db_create_script($userid);
     $versionid = db_create_version($userid, $scriptid, $script);
 
-    $stags = explode(' ', $script['tags']);
-    $stags = array_unique($stags);
+    $stags = $script['tags'];
     if (isset($stags)) {
         foreach ($stags as $tag) {
             $stagid = db_get_stagid_by_stag($tag);
@@ -50,8 +49,7 @@ function update_script($scriptid, $script) {
 
     qa_db_set_script_last_version($scriptid, $versionid);
 
-    $stags = explode(' ', $script['tags']);
-    $stags = array_unique($stags);
+    $stags = $script['tags'];
     if (isset($stags)) {
         foreach ($stags as $tag) {
             $stagid = db_get_stagid_by_stag($tag);
@@ -279,11 +277,11 @@ function validate_script_desc(&$script) {
 }
 
 function validate_script_tags(&$script) {
-    $len = strlen($script['tags']);
-    if ($len > 400) {
-        $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags');
-        return false;
-    }
+//    $len = strlen($script['tags']);
+//    if ($len > 400) {
+//        $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags');
+//        return false;
+//    }
     return true;
 }
 

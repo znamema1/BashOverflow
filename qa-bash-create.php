@@ -44,7 +44,9 @@ class qa_bash_create_page {
                 $qa_content['error'] = qa_lang_html('plugin_bash/edit_script_error');
                 return $qa_content;
             }
-            $script['tags'] = implode(' ', $script['tags']);
+            if (!empty($script['tags'])) {
+                $script['tags'] = implode(' ', $script['tags']);
+            }
             unset($script['comm_msg']);
         } else {
             $qa_content['title'] = qa_lang_html('plugin_bash/create_script_title');
@@ -65,6 +67,7 @@ class qa_bash_create_page {
                 qa_redirect('script/' . $scriptid);
             } else {
                 $qa_content['error'] = qa_lang_html('plugin_bash/create_script_error');
+                $script['tags'] = implode(' ', $script['tags']);
             }
         } else if ($mode !== $this->EDIT_MODE) {
             $script['repos'] = array(
@@ -173,7 +176,7 @@ class qa_bash_create_page {
     function load_script() {
         $script['name'] = qa_post_text('scriptname');
         $script['desc'] = qa_post_text('scriptdesc');
-        $script['tags'] = qa_post_text('scripttags');
+        $script['tags'] = $this->load_tags();
         $script['example_data'] = qa_post_text('scriptexample');
         $script['comm_msg'] = qa_post_text('comm_msg');
         $repos = array();
@@ -191,16 +194,18 @@ class qa_bash_create_page {
         return $script;
     }
 
+    function load_tags() {
+        require_once QA_INCLUDE_DIR . 'util/string.php';
+        $text = qa_remove_utf8mb4(qa_post_text('scripttags'));
+        return array_unique(qa_string_to_words($text, true, false, false, false));
+    }
+
     function add_repo_fields($scripts) {
         $fields = array();
         $counter = 1;
         foreach ($scripts as $script) {
             $fields = array_merge($fields, $this->add_repo_field($script, $counter));
             $counter++;
-            $fields [] = array(
-                'type' => 'blank',
-                'rows' => 1,
-            );
         }
         $fields [] = array(
             'type' => 'hidden',
@@ -214,6 +219,11 @@ class qa_bash_create_page {
 
     function add_repo_field($script, $counter) {
         $fields = array(
+            array(
+                'type' => 'static',
+                'style' => 'tall',
+                'value' => '<strong>Script ' . $counter . '</strong>'
+            ),
             array(
                 'type' => 'text',
                 'rows' => 1,
@@ -238,6 +248,10 @@ class qa_bash_create_page {
                 'value' => qa_html(@$script['comm']),
                 'error' => qa_html(@$script['comm_error']),
             ),
+            array(
+                'type' => 'blank',
+                'rows' => 1,
+            )
         );
         return $fields;
     }
