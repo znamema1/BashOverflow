@@ -16,10 +16,10 @@ function create_script($script) {
 
     $stags = $script['tags'];
     if (isset($stags)) {
-        foreach ($stags as $tag) {
-            $stagid = db_get_stagid_by_stag($tag);
+        foreach ($stags as $stag) {
+            $stagid = db_get_stagid_by_stag($stag);
             if (!isset($stagid)) {
-                $stagid = db_create_stag($tag);
+                $stagid = db_create_stag($stag);
             }
             db_add_version_stag_relation($scriptid, $versionid, $stagid);
         }
@@ -39,7 +39,7 @@ function create_script($script) {
 
 function update_script($scriptid, $script) {
     $userid = qa_get_logged_in_userid();
-    $data = qa_db_get_script($scriptid);
+    $data = db_get_script($scriptid);
     if (!isset($data)) {
         return;
     }
@@ -47,14 +47,14 @@ function update_script($scriptid, $script) {
 
     $versionid = db_create_version($userid, $scriptid, $script, $version + 1);
 
-    qa_db_set_script_last_version($scriptid, $versionid);
+    db_set_script_last_version($scriptid, $versionid);
 
     $stags = $script['tags'];
     if (isset($stags)) {
-        foreach ($stags as $tag) {
-            $stagid = db_get_stagid_by_stag($tag);
+        foreach ($stags as $stag) {
+            $stagid = db_get_stagid_by_stag($stag);
             if (!isset($stagid)) {
-                $stagid = db_create_stag($tag);
+                $stagid = db_create_stag($stag);
             }
             db_add_version_stag_relation($scriptid, $versionid, $stagid);
         }
@@ -73,7 +73,7 @@ function update_script($scriptid, $script) {
 }
 
 function get_script($scriptid, $ver = null) {
-    $script = qa_db_get_script($scriptid);
+    $script = db_get_script($scriptid);
     if (!isset($script)) {
         return null;
     }
@@ -81,13 +81,13 @@ function get_script($scriptid, $ver = null) {
     if (!isset($ver)) {
         $ver = $script['last_version'];
     }
-    $data = qa_db_get_version($scriptid, $ver);
+    $data = db_get_version($scriptid, $ver);
     if (!isset($data)) {
         return null;
     }
 
-    $stags = qa_db_get_stags($scriptid, $ver);
-    $repos = qa_db_get_repos($scriptid, $ver);
+    $stags = db_get_script_stags($scriptid, $ver);
+    $repos = db_get_repos($scriptid, $ver);
 
     if (!empty($stags[0]['stag'])) {
         foreach ($stags as $value) {
@@ -116,16 +116,16 @@ function get_script($scriptid, $ver = null) {
     return $ret;
 }
 
-function get_popular_tags($start, $count = null) {
-    $result = get_stags($start, $count);
+function get_popular_stags($start, $count = null) {
+    $result = db_get_stags($start, $count);
     foreach ($result as $value) {
         $ret[$value['stag']] = $value['count'];
     }
     return $ret;
 }
 
-function get_scripts_by_tag($tag, $start, $count = null) {
-    $result = get_versionid_and_scriptid_by_stag($tag, $start, $count);
+function get_scripts_by_stag($stag, $start, $count = null) {
+    $result = db_get_versionid_and_scriptid_by_stag($stag, $start, $count);
 
     foreach ($result as $script) {
         $ret[] = get_script_overview($script['scriptid'], $script['versionid']);
@@ -173,10 +173,10 @@ function get_scripts_by_date($is_mine, $start, $count) {
 }
 
 function get_script_overview($scriptid, $versionid) {
-    $script = qa_db_get_script($scriptid);
-    $data = qa_db_get_version_overview($scriptid, $versionid);
+    $script = db_get_script($scriptid);
+    $data = db_get_version_overview($scriptid, $versionid);
 
-    $stags = qa_db_get_stags($scriptid, $versionid);
+    $stags = db_get_script_stags($scriptid, $versionid);
 
     if (!empty($stags[0]['stag'])) {
         foreach ($stags as $value) {
@@ -206,7 +206,7 @@ function get_script_overview($scriptid, $versionid) {
 }
 
 function search_scripts($q, $start, $count) {
-    $result = get_scripts_by_q($q, $start, $count);
+    $result = db_get_scripts_by_q($q, $start, $count);
 
     foreach ($result as $script) {
         $ret[] = get_script_overview($script['scriptid'], $script['versionid']);
@@ -323,8 +323,8 @@ function validate_script_tags(&$script) {
         return false;
     }
     if (count($count)) {
-        foreach ($script['tags'] as $tag) {
-            if (strlen($tag) > 20) {
+        foreach ($script['tags'] as $stag) {
+            if (strlen($stag) > 20) {
                 $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags_length');
                 return false;
             }

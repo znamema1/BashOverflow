@@ -19,10 +19,10 @@ class qa_bash_stags_page {
         require_once __DIR__ . '/../app/qa-bash-base.php';
         $start = qa_get_start();
         $pagesize = qa_opt('page_size_tags');
-        $tagcount = get_stag_count();
-        $populartags = get_popular_tags($start, $pagesize);
+        $tagcount = db_get_stag_count();
+        $populartags = get_popular_stags($start, $pagesize);
 
-        $tagcount = get_stag_count();
+        $tagcount = db_get_stag_count();
 
         $qa_content = qa_content_prepare();
         $qa_content['title'] = qa_lang_html('plugin_bash/stags_title');

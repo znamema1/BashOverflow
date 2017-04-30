@@ -28,7 +28,7 @@ class qa_bash_stag_page {
         $qa_content['title'] = qa_lang_html_sub('plugin_bash/stag_title_x', qa_html($tag));
 
         $pagesize = qa_opt('page_size_tag_qs');
-        $scripts = get_scripts_by_tag($tag, $start, $pagesize);
+        $scripts = get_scripts_by_stag($tag, $start, $pagesize);
 
         $qa_content['s_list']['items'] = $scripts;
         if (!count($scripts)) {
