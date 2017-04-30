@@ -14,6 +14,7 @@ class qa_bash_list_page {
         $start = qa_get_start();
         $sort = @qa_get('sort');
         $pagesize = qa_opt('page_size_qs');
+        $userid = qa_get_logged_in_userid();
 
         switch ($sort) {
             case 'votes': {
@@ -27,12 +28,14 @@ class qa_bash_list_page {
                     break;
                 }
             case 'mine': {
-                    $selectsort = null;
                     $qa_content['title'] = qa_lang_html('plugin_bash/list_script_title_my');
+                    if (!isset($userid)) {
+                        $qa_content['error'] = qa_insert_login_links(qa_lang_html('plugin_bash/list_script_error_my'));//qa_lang_html('plugin_bash/list_script_error_my');
+                        return $qa_content;
+                    }
                     break;
                 }
             default: {
-                    $selectsort = null;
                     $qa_content['title'] = qa_lang_html('plugin_bash/list_script_title_recent');
                     break;
                 }
