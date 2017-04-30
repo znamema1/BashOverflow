@@ -1,12 +1,16 @@
 
 .qa-nav-main-scripts .qa-nav-main-link:before {
-    content: '\e813';
+    content: '\e80b';
 }
 
 .qa-nav-main-create_script .qa-nav-main-link:before {
     content: '\e80C';
 }
 
+.qa-nav-main-questions .qa-nav-main-link:before {
+    content: '\e800';
+}
+
 body{
-    font-family: sans-serif !important;
+    font-family: 'Roboto' !important;
 }
