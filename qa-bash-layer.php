@@ -78,12 +78,11 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_meta_content($s_view, $class) {
         $this->output('<span class="' . $class . '-what">' . $s_view['what'] . '</span>');
-        $this->output('<span class="' . $class . '-when">' . $s_view['when'] . '</span>');
         $this->output('<span class="' . $class . '-who">' . $s_view['who'] . '</span>');
         if (!empty($s_view['what_2'])) {
-            $this->output('<br/>');
+            $this->output(', ');
             $this->output('<span class="' . $class . '-what">' . $s_view['what_2'] . '</span>');
-            $this->output('<span class="' . $class . '-when">' . $s_view['when_2'] . '</span>');
+            $this->output_split(@$s_view['when_2'], $class . '-when');
             $this->output('<span class="' . $class . '-who">' . $s_view['who_2'] . '</span>');
         }
     }

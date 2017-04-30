@@ -102,8 +102,7 @@ function get_script($scriptid, $ver = null) {
     $ret['comm_msg'] = @$data['commitmsg'];
     $ret['repos'] = $repos;
     $ret['author'] = $script['userid'];
-    $ret['edit'] = $data['editorid'];
-    $ret['create_date'] = 'XXX'; // to delete
+    $ret['editor'] = $data['editorid'];
     $ret['edit_date'] = $data['created'];
     $ret['score'] = $script['score'];
     $ret['exec_count'] = $script['run_count'];
@@ -113,6 +112,7 @@ function get_script($scriptid, $ver = null) {
     } else {
         $ret['selected_version'] = $ver;
     }
+    $ret['is_public'] = $script['accessibility'] == 'A';
     return $ret;
 }
 
@@ -174,6 +174,10 @@ function get_script_overview($scriptid, $versionid) {
         }
     }
 
+    $authorinfo = qa_db_single_select(qa_db_user_account_selectspec($script['userid'], true));
+    $editorinfo = qa_db_single_select(qa_db_user_account_selectspec($data['editorid'], true));
+
+
     $ret['score'] = $script['score'];
     $ret['score_label'] = qa_lang_html_sub_split('main/x_votes', '')['suffix'];
     $ret['exec_count'] = $script['run_count'];
@@ -181,10 +185,13 @@ function get_script_overview($scriptid, $versionid) {
     $ret['title'] = $data['name'];
     $ret['url'] = qa_path_html('script/' . $scriptid);
     $ret['tags'] = @$tags;
-    $ret['what'] = 'created';
+    $ret['what'] = qa_html('owned');
     $ret['when'] = '2 minutes ago';
     $ret['created'] = $data['created'];
-    $ret['who'] = 'by martin';
+    $ret['who'] = qa_html(' by ') . get_user_info_base($script['userid']) . qa_html(' (' . $authorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
+    $ret['what_2'] = qa_html('edited');
+    $ret['when_2'] = qa_when_to_html($data['created'], @$options['fulldatedays']);
+    $ret['who_2'] = qa_html('by ') . get_user_info_base($data['editorid']) . qa_html(' (' . $editorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
     return $ret;
 }
 
@@ -197,31 +204,10 @@ function search_scripts($q, $start, $count) {
     return @$ret;
 }
 
-/*
-  function get_scripts_by_tag($tag, $start = 0) {
-  $scripts = db_getscripts_versions_by_tag($tag, $start);
-  }
-
-  function get_scripts_by_user($userid, $start) {
-  $userid = qa_get_logged_in_userid();
-  $scripts = db_get_scripts_by_user($userid);
-  $scripts = db_get_curr_versions_by_scriptid($scripts['id']);
-
-
-  return $array;
-  }
-
-  function get_all_scripts($type, $start) {
-  return db_get_script($type, $start);
-  }
-
-  function get_script_by_query($query, $start) {
-  //??
-  }
-
-  function run_script($script) {
-  // api connect
-  }
+function get_user_info_base($userid) {
+    $handle = qa_userid_to_handle($userid);
+    return qa_get_one_user_html($handle);
+}
 
   function vote_script($script, $vote) {
 
