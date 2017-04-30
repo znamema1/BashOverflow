@@ -1,4 +1,11 @@
+// global constants
 const ANIM_DUR = 400;
+
+// local constants
+const COUNTER_MIN = 2;
+const COUNTER_MAX = 10;
+const BTN_DISABLE = "qa-btn-disabled";
+
 function getCounter() {
     var counter = $('#counter').attr('value');
     return counter;
@@ -8,66 +15,87 @@ function setCounter(number) {
     $('#counter').attr('value', number);
 }
 
-function getContent(counter) {
+function disable(element) {
+	$(element).addClass(BTN_DISABLE);
+}
+
+function enable(element) {
+        $(element).removeClass(BTN_DISABLE);
+}
+
+function addContent(counter) {
     $.ajax({
-        url: window.location.href + '../ajax_create_page/' + counter,
+        url: qa_root + 'ajax_create_page/' + counter,
         success: function (data) {
             var $content = $(data);
+            $content.hide();
+
+            counter = getCounter();
+            if (counter > COUNTER_MAX) {
+                return;
+            }
+            setCounter(++counter);
+
             $('#counter').parent().parent().before($content);
             $content.show(ANIM_DUR);
-            setCounter(++counter);
-            if (counter <= 3) {
-                $("#btn-remove").removeClass("qa-btn-disabled");
+
+            if (counter <= COUNTER_MIN + 1) {
+                enable("#btn-remove");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("An error while retrieving data: \n" +
-                    textStatus + "\n\n" + 
-                    errorThrown);
+            alert("Error while retrieving data");
         }
     });
 }
 
 function addScript() {
     var counter = getCounter();
-    if (counter > 10) {
+    if (counter > COUNTER_MAX) {
         return;
-    } else if (counter > 9) {
-        $("#btn-add").addClass("qa-btn-disabled");
+    } else if (counter == COUNTER_MAX) {
+        disable("#btn-add");
     }
 
-    getContent(counter);
+    addContent(counter);
 }
 
 function removeScript() {
     var counter = getCounter();
-    if (counter <= 2) {
-        return;
-    } else if (counter <= 3) {
-        $("#btn-remove").addClass("qa-btn-disabled");
-    }
+    --counter;
 
-    var $current = $('#counter').parent().parent().prev();
+    if (counter < COUNTER_MIN) {
+        return;
+    } else if (counter == COUNTER_MIN) {
+        disable("#btn-remove");
+    }
+    setCounter(counter);
+
+
+    var $current = $('#scriptcomm' + counter).parent().parent().next();
     var $toRemove = $();
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 8; i++) {
         $toRemove = $toRemove.add($current);
         $current = $current.prev();
     }
+/*/
+    var $toRemove = $('.script-no' + counter);
+//*/
 
     $toRemove.hide(ANIM_DUR, function () {
         $toRemove.remove();
     });
-    setCounter(--counter);
-    if (counter <= 3) {
-        $("#btn-add").removeClass("qa-btn-disabled");
+
+    if (counter <= COUNTER_MAX) {
+        enable("#btn-add");
     }
 }
 
 $(document).ready(function () {
-    if (getCounter() <= 2) {
-        $("#btn-remove").addClass("qa-btn-disabled");
+    if (getCounter() <= COUNTER_MIN) {
+        disable("#btn-remove");
     } else {
-        $("#btn-remove").removeClass("qa-btn-disabled");
+        enable("#btn-remove");
     }
 });
 
