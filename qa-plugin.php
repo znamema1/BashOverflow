@@ -75,6 +75,11 @@ qa_register_plugin_layer(
         'layers/qa-bash-nav-layer.php', // PHP file containing layer
         'Layer for custom navigation' // human-readable name of layer
 );
+
+qa_register_plugin_layer(
+        'layers/qa-bash-activity-layer.php', // PHP file containing layer
+        'Layer for user profile' // human-readable name of layer
+);
 qa_register_plugin_module(
         'page', // type of module
         'ajax/qa-bash-ajax-create.php', // PHP file containing module class

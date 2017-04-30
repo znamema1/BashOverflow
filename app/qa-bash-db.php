@@ -160,6 +160,39 @@ function db_update_score($scriptid, $value) {
     qa_db_query_sub('UPDATE ^scripts SET `score` = `score` + # WHERE scriptid = #', $value, $scriptid);
 }
 
+function db_get_count_user_script($userid) {
+    $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM qa_scripts WHERE userid = #', $userid);
+    return qa_db_read_one_value($result);
+}
+
+function db_get_count_user_edited_script($userid) {
+    $result = qa_db_query_sub('SELECT COUNT(v.scriptid) FROM qa_scripts s JOIN qa_versions v ON s.scriptid = v.scriptid '
+            . 'WHERE v.editorid != s.userid AND v.editorid = #', $userid);
+    return qa_db_read_one_value($result);
+}
+
+function db_get_count_user_votedon_up($userid) {
+    $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM qa_svotes WHERE userid = # AND vote > 0', $userid);
+    return qa_db_read_one_value($result);
+}
+
+function db_get_count_user_votedon_down($userid) {
+    $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM qa_svotes WHERE userid = # AND vote < 0', $userid);
+    return qa_db_read_one_value($result);
+}
+
+function db_get_count_user_votedgot_up($userid) {
+    $result = qa_db_query_sub('SELECT COUNT(v.scriptid) FROM qa_svotes v JOIN qa_scripts s ON s.scriptid = v.scriptid '
+            . 'WHERE s.userid = # AND vote > 0', $userid);
+    return qa_db_read_one_value($result);
+}
+
+function db_get_count_user_votedgot_down($userid) {
+    $result = qa_db_query_sub('SELECT COUNT(v.scriptid) FROM qa_svotes v JOIN qa_scripts s ON s.scriptid = v.scriptid '
+            . 'WHERE s.userid = # AND vote < 0', $userid);
+    return qa_db_read_one_value($result);
+}
+
 function init_db_tables($table_list) {
     if (in_array('qa_scripts', $table_list)) {
         return null;
