@@ -22,6 +22,7 @@ class qa_bash_detail_page {
         $parts = explode('/', $request);
         $scriptid = @$parts[1];
         $version = @qa_get('ver');
+        $userid = qa_get_logged_in_userid();
 
         if (qa_clicked('version')) {
             qa_redirect($request, array("ver" => qa_post_text('version')));
@@ -43,7 +44,7 @@ class qa_bash_detail_page {
         $qa_content['title'] = qa_html($script['name']);
 
         if (qa_clicked('dorun')) {
-            qa_redirect('run/'. $scriptid, (isset($version) ? array("ver" => $version) : null));
+            qa_redirect('run/' . $scriptid, (isset($version) ? array("ver" => $version) : null));
         }
         if (qa_clicked('doedit')) {
             qa_redirect('edit_script/' . $scriptid);
@@ -77,32 +78,30 @@ class qa_bash_detail_page {
             ),
         );
         $qa_content['form']['fields'] = $this->repos_to_fields($script['repos']);
-        if (true) { // owner
+
+        if (isset($userid)) {
             $qa_content['form2']['buttons'][] = array(
                 'tags' => 'NAME="doedit"',
                 'label' => qa_lang_html('plugin_bash/detail_script_edit_button'),
                 'popup' => qa_lang_html('plugin_bash/detail_script_edit_button'),
             );
-            $qa_content['form2']['buttons'][] = array(
-                'tags' => 'NAME="dodelete" class="qa-form-light-button qa-form-light-button-delete"',
-                'label' => qa_lang_html('plugin_bash/detail_script_delete_button'),
-                'popup' => qa_lang_html('plugin_bash/detail_script_delete_button'),
-            );
-        }
-        if (true) {//public/private
-            $qa_content['form2']['buttons'][] = array(
-                'tags' => 'NAME="doprivate" class= "qa-form-light-button qa-form-light-button-close"',
-                'label' => qa_lang_html('plugin_bash/detail_script_private_button'),
-                'popup' => qa_lang_html('plugin_bash/detail_script_private_button'),
-            );
-        } else {
-            $qa_content['form2']['buttons'][] = array(
-                'tags' => 'NAME="dopublic" class= "qa-form-light-button qa-form-light-button-reopen"',
-                'label' => qa_lang_html('plugin_bash/detail_script_public_button'),
-                'popup' => qa_lang_html('plugin_bash/detail_script_public_button'),
-            );
         }
 
+        if ($userid == $script['author']) {
+            if ($script['is_public']) {
+                $qa_content['form2']['buttons'][] = array(
+                    'tags' => 'NAME="doprivate" class= "qa-form-light-button qa-form-light-button-close"',
+                    'label' => qa_lang_html('plugin_bash/detail_script_private_button'),
+                    'popup' => qa_lang_html('plugin_bash/detail_script_private_button'),
+                );
+            } else {
+                $qa_content['form2']['buttons'][] = array(
+                    'tags' => 'NAME="dopublic" class= "qa-form-light-button qa-form-light-button-reopen"',
+                    'label' => qa_lang_html('plugin_bash/detail_script_public_button'),
+                    'popup' => qa_lang_html('plugin_bash/detail_script_public_button'),
+                );
+            }
+        }
         return $qa_content;
     }
 
