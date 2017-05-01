@@ -6,23 +6,16 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const FILE_TYPE = "text/plain";
 const units = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
 
-
+var fileValid = false;
 var running = false;
 
 function runText(script_id, waiting_elem) {
-    var input = $('#datain').val();
-
-    if (input.length == 0) {
-        alert("Empty input");
-        return false;
-    }
-
     $.ajax({
         url: qa_root + 'ajax_run_page_text/' + script_id,
         type: 'POST',
         data: {
 //            scriptid: script_id,
-            datain: input
+            datain: $('#datain').val()
         },
         success: showResult,
         error: function (err) {
@@ -47,17 +40,6 @@ function getNiceSize(fileSize) {
 
 function runFile(script_id, waiting_elem) {
     var file = $('#filein')[0].files[0]; //Files[0] = 1st file
-
-    if (file.type != FILE_TYPE) {
-        alert('Only ' + FILE_TYPE + ' type is supported! You provided: ' + file.type);
-        return false;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-        alert('Max upload size is ' + getNiceSize(MAX_FILE_SIZE) + '! Your file size: ' + getNiceSize(file.size));
-        return false;
-    }
-
     var reader = new FileReader();
     reader.readAsText(file, 'UTF-8');
     reader.onload = function (event) {
@@ -100,10 +82,14 @@ function handleInput(elem) {
     var parts = window.location.href.split('/');
     var scriptid = parts[parts.length - 1];
     var runFn;
-    if ($('#filein')[0].files.length > 0) {
+    if (fileValid) {
         runFn = runFile;
-    } else {
+    } else if ($('#datain').val().length > 0) {
         runFn = runText;
+    } else {
+        alert("No valid input!");
+        running = false;
+        return false;
     }
 
     if (runFn(scriptid, elem)) {
@@ -135,27 +121,44 @@ $(document).ready(function () {
     $content.hide();
     $('.qa-main').append($content);
 
-    $content = $('<span id="filesize"></span>');
+    var filemsgID = 'filemsg';
+    $content = $('<span id="' + filemsgID + '"></span>');
+    $content.fadeOut();
     $('#filein').parent().append($content);
 
-    $('#filein').change(function (e) {
-        var size = "";
-        var tooBig = false;
+    $('#filein').change(function (evt) {
+        var msg = "", title = "";
+        var $msgElem = $('#' + filemsgID);
 
-        if (e.target.files.length > 0) {
-            size = getNiceSize(e.target.files[0].size);
-            if (e.target.files[0].size > MAX_FILE_SIZE) {
-                tooBig = true;
-            }
+        fileValid = false;
+        if (evt.target.files.length == 0) {
+            $msgElem.fadeOut(ANIM_DUR);
+            return;
         }
 
-        var $sizeElem = $('#filesize');
-        $sizeElem.html(size);
-        if (tooBig) {
-            $sizeElem.addClass("qa-error");
-            $sizeElem.attr("title", "The file is too large!");
+        var file = evt.target.files[0]; //Files[0] = 1st file
+
+        if (file.type != FILE_TYPE) {
+            msg = 'Only ' + FILE_TYPE + ' type supported.';
+            title = 'You provided: ' + (file.type.length > 0 ? file.type : "<unknown>" );
+        } else if (file.size > MAX_FILE_SIZE) {
+            msg = 'Maximum allowed size is ' + getNiceSize(MAX_FILE_SIZE) + '.';
+            title = 'Your file is too large: ' + getNiceSize(file.size);
         } else {
-            $sizeElem.removeClass("qa-error");
+            msg = getNiceSize(file.size);
+            title = "Your file is approved";
+            fileValid = true;
         }
+
+        $msgElem.fadeOut(ANIM_DUR/2, function () {
+            $msgElem.html(msg);
+            $msgElem.attr("title", title);
+            if (!fileValid) {
+                $msgElem.addClass("qa-error");
+            } else {
+                $msgElem.removeClass("qa-error");
+            }
+            $msgElem.fadeIn(ANIM_DUR/2);
+        });
     });
 });

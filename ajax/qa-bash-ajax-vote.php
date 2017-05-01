@@ -14,7 +14,7 @@ class qa_bash_ajax_vote {
         $userid = qa_get_logged_in_userid();
 
         if (!isset($userid)) {
-            exit();
+            return null;
         }
 
         $score = vote_script($userid, $scriptid, $vote);
