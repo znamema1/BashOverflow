@@ -52,6 +52,7 @@ return array(
     'list_script_title_my' => 'My scripts',
     'list_script_error_my' => 'Please ^1log in^2 or ^3register^4 to see your scripts!',
     'list_script_title_no' => 'No scripts found',
+    'list_script_no_vote' => 'Please view this script to vote',
     'error_script_name' => 'Script name must be ^1-^2 characters long!',
     'error_script_desc' => 'Script description must be ^1-^2 characters long!',
     'error_script_tags_count' => 'Script can have ^1-^2 tags!',

@@ -44,9 +44,9 @@ class qa_bash_stags_page {
                 if (( ++$output) >= $pagesize)
                     break;
             }
-        } else
+        } else {
             $qa_content['title'] = qa_lang_html('plugin_bash/stags_title_no');
-
+        }
 
         $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $tagcount, qa_opt('pages_prev_next'));
 

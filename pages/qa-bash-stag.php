@@ -33,6 +33,12 @@ class qa_bash_stag_page {
         $qa_content['s_list']['items'] = $scripts;
         if (!count($scripts)) {
             $qa_content['s_list']['title'] = qa_lang_html('plugin_bash/stag_title_no');
+        } else {
+            foreach ($qa_content['s_list']['items'] as &$item) {
+                $item['state'] = 'item';
+                $item['vote_up'] = qa_lang_html('plugin_bash/list_script_no_vote');
+                $item['vote_down'] = qa_lang_html('plugin_bash/list_script_no_vote');
+            }
         }
         $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, count($scripts), qa_opt('pages_prev_next'));
 

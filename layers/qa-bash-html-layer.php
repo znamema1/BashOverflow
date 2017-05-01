@@ -29,9 +29,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_voting($s_view, $class) {
         $this->output('<div class="qa-voting qa-voting-net">');
-        if ($class != 'qa-q-item') {
-            $this->s_vote_buttons($s_view);
-        }
+        $this->s_vote_buttons($s_view);
         $this->s_vote_count($s_view);
         $this->vote_clear();
         $this->output('</div>');
@@ -55,6 +53,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
                 }
             case 'nouser':
             case 'owner':
+            case 'item';
             default: {
                     $this->output('<input title="' . $s_view['vote_up'] . '" name="vote_up" type="button" value="+" class="qa-vote-first-button qa-vote-up-disabled"> ');
                     $this->output('<input title="' . $s_view['vote_down'] . '" name="vote_down" type="button" value="–" class="qa-vote-second-button qa-vote-down-disabled"> ');
@@ -66,12 +65,12 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_vote_count($s_view) {
         if ($s_view['score'] > 0) {
-            $s_view['score'] = '+' . $s_view['score'];
+            $plus = '+';
         }
 
         $this->output('<div class="qa-vote-count qa-vote-count-net">');
         $this->output('<span class="qa-netvote-count">');
-        $this->output('<span class="qa-netvote-count-data">', $s_view['score'], '</span>');
+        $this->output('<span class="qa-netvote-count-data">', @$plus . number_format($s_view['score']), '</span>');
         $this->output('<span class="qa-netvote-count-pad">' . $s_view['score_label'] . '</span>');
         $this->output('</span>');
         $this->output('</div>');
@@ -79,7 +78,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function s_exec_count($s_view) {
         $this->output('<span class="qa-view-count">');
-        $this->output('<span class="qa-view-count-data">' . $s_view['exec_count'] . '</span><span class="qa-view-count-pad">' . $s_view['exec_label'] . '</span>');
+        $this->output('<span class="qa-view-count-data">' . number_format($s_view['exec_count']) . '</span><span class="qa-view-count-pad">' . $s_view['exec_label'] . '</span>');
         $this->output('</span>');
     }
 
