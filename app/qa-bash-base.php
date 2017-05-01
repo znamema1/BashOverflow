@@ -299,33 +299,55 @@ function validate_script(&$script, $check_comm_msg) {
 }
 
 function validate_script_name(&$script) {
+    $min_len = qa_opt('plugin_bash_overflow_script_name_min_len');
+    $max_len = qa_opt('plugin_bash_overflow_script_name_max_len');
     $len = strlen($script['name']);
-    if ($len < 5 || $len > 40) {
-        $script['name_error'] = qa_lang_html('plugin_bash/error_script_name');
+
+    if ($len < $min_len || $len > $max_len) {
+        $script['name_error'] = strtr(qa_lang_html('plugin_bash/error_script_name'), array(
+            '^1' => $min_len,
+            '^2' => $max_len));
         return false;
     }
     return true;
 }
 
 function validate_script_desc(&$script) {
+    $min_len = qa_opt('plugin_bash_overflow_script_desc_min_len');
+    $max_len = qa_opt('plugin_bash_overflow_script_desc_max_len');
     $len = strlen($script['desc']);
-    if ($len > 400) {
-        $script['desc_error'] = qa_lang_html('plugin_bash/error_script_desc');
+
+    if ($len < $min_len || $len > $max_len) {
+        $script['desc_error'] = strtr(qa_lang_html('plugin_bash/error_script_desc'), array(
+            '^1' => $min_len,
+            '^2' => $max_len));
         return false;
     }
     return true;
 }
 
 function validate_script_tags(&$script) {
+    $min_count = qa_opt('plugin_bash_overflow_script_tag_min_count');
+    $max_count = qa_opt('plugin_bash_overflow_script_tag_max_count');
+    $min_len = qa_opt('plugin_bash_overflow_script_tag_min_len');
+    $max_len = qa_opt('plugin_bash_overflow_script_tag_max_len');
+
     $count = count($script['tags']);
-    if ($count > 5) {
-        $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags_count');
+
+    if ($count > $max_count || $count < $min_count) {
+        $script['tags_error'] = strtr(qa_lang_html('plugin_bash/error_script_tags_count'), array(
+            '^1' => $min_count,
+            '^2' => $max_count));
         return false;
     }
+
     if (count($count)) {
         foreach ($script['tags'] as $stag) {
-            if (strlen($stag) > 20) {
-                $script['tags_error'] = qa_lang_html('plugin_bash/error_script_tags_length');
+            $len = strlen($stag);
+            if ($len < $min_len || $len > $max_len) {
+                $script['tags_error'] = strtr(qa_lang_html('plugin_bash/error_script_tags_length'), array(
+                    '^1' => $min_len,
+                    '^2' => $max_len));
                 return false;
             }
         }
@@ -335,18 +357,28 @@ function validate_script_tags(&$script) {
 }
 
 function validate_script_example_data(&$script) {
+    $min_len = qa_opt('plugin_bash_overflow_script_example_min_len');
+    $max_len = qa_opt('plugin_bash_overflow_script_example_max_len');
     $len = strlen($script['example_data']);
-    if ($len > 300) {
-        $script['example_data_error'] = qa_lang_html('plugin_bash/error_script_example_data');
+
+    if ($len < $min_len || $len > $max_len) {
+        $script['example_data_error'] = strtr(qa_lang_html('plugin_bash/error_script_example_data'), array(
+            '^1' => $min_len,
+            '^2' => $max_len));
         return false;
     }
     return true;
 }
 
 function validate_script_comm_msg(&$script) {
+    $min_len = qa_opt('plugin_bash_overflow_script_comm_msg_min_len');
+    $max_len = qa_opt('plugin_bash_overflow_script_comm_msg_max_len');
     $len = strlen($script['comm_msg']);
-    if ($len < 5 || $len > 150) {
-        $script['comm_msg_error'] = qa_lang_html('plugin_bash/error_script_comm_msg');
+
+    if ($len < $min_len || $len > $max_len) {
+        $script['comm_msg_error'] = strtr(qa_lang_html('plugin_bash/error_script_comm_msg'), array(
+            '^1' => $min_len,
+            '^2' => $max_len));
         return false;
     }
     return true;
@@ -390,9 +422,10 @@ function validate_script_repo(&$repo) {
 }
 
 function validate_git(&$repo) {
-    $regex = '/^https:\/\/github\.com\/\S{1,39}\/\S{1,100}\.git/';
+    $regex = qa_opt('plugin_bash_overflow_script_git_regex');
     if (!preg_match_all($regex, $repo['git']) == 1) {
-        $repo['git_error'] = qa_lang_html('plugin_bash/error_script_git_format');
+        $repo['git_error'] = strtr(qa_lang_html('plugin_bash/error_script_git_format'), array(
+            '^1' => $regex));
         return false;
     } else {
         return true;
@@ -400,18 +433,29 @@ function validate_git(&$repo) {
 }
 
 function validate_file(&$repo) {
+    $min_len = qa_opt('plugin_bash_overflow_script_file_min_len');
+    $max_len = qa_opt('plugin_bash_overflow_script_file_max_len');
     $len = strlen($repo['file']);
-    if ($len > 150 || substr($repo['file'], 0, 1) == '.') {
-        $repo['file_error'] = qa_lang_html('plugin_bash/error_script_file_format');
+
+    if ($len < $min_len || $len > $max_len || substr($repo['file'], 0, 1) == '.') {
+        $repo['file_error'] = strtr(qa_lang_html('plugin_bash/error_script_file_format'), array(
+            '^1' => $min_len,
+            '^2' => $max_len));
         return false;
     }
     return true;
 }
 
 function validate_comm(&$repo) {
+    
+    $min_len = qa_opt('plugin_bash_overflow_script_comm_min_len');
+    $max_len = qa_opt('plugin_bash_overflow_script_comm_max_len');
     $len = strlen($repo['comm']);
-    if ($len < 6 || $len > 40) {
-        $repo['comm_error'] = qa_lang_html('plugin_bash/error_script_comm_format');
+
+    if ($len < $min_len || $len > $max_len) {
+        $repo['comm_error'] = strtr(qa_lang_html('plugin_bash/error_script_comm_format'), array(
+            '^1' => $min_len,
+            '^2' => $max_len));
         return false;
     }
     return true;
