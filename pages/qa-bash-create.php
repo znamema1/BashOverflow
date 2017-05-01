@@ -11,11 +11,6 @@ class qa_bash_create_page {
         $this->directory = $directory;
     }
 
-    public function init_queries($table_list) {
-        require_once __DIR__ . '/../app/qa-bash-db.php';
-        return init_db_tables($table_list);
-    }
-
     function match_request($request) {
         $parts = explode('/', $request);
         return $parts[0] == 'create_script' || $parts[0] == 'edit_script';

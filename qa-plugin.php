@@ -4,7 +4,7 @@
   Plugin Name: BashOverflow plugin
   Plugin URI:
   Plugin Description: Extends the functionality of Q2A by script managing.
-  Plugin Version: 0.1
+  Plugin Version: 0.5
   Plugin Date: 2017-04-16
   Plugin Author: Martin Znamenáček
   Plugin Author URI:
@@ -60,6 +60,13 @@ qa_register_plugin_module(
         'pages/qa-bash-search.php', // PHP file containing module class
         'qa_bash_search_page', // name of module class
         'Script search page' // human-readable name of module
+);
+
+qa_register_plugin_module(
+        'page', // type of module
+        'pages/qa-bash-admin.php', // PHP file containing module class
+        'qa_bash_admin_page', // name of module class
+        'Admin page' // human-readable name of module
 );
 
 qa_register_plugin_phrases(

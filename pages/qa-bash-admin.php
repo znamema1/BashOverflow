@@ -1,0 +1,119 @@
+<?php
+
+class qa_bash_admin_page {
+
+    function match_request($request) {
+        return false;
+    }
+
+    function process_request($request) {
+        return null;
+    }
+    
+    public function init_queries($table_list) {
+        require_once __DIR__ . '/../app/qa-bash-db.php';
+        return init_db_tables($table_list);
+    }
+
+    function option_default($option) {
+        switch ($option) {
+            case 'plugin_bash_overflow_server_url': return '127.0.0.1';
+            case 'plugin_bash_overflow_script_name_min_len': return 5;
+            case 'plugin_bash_overflow_script_name_max_len': return 40;
+            case 'plugin_bash_overflow_script_desc_min_len': return 0;
+            case 'plugin_bash_overflow_script_desc_max_len': return 400;
+            case 'plugin_bash_overflow_script_tag_min_count': return 0;
+            case 'plugin_bash_overflow_script_tag_max_count': return 5;
+            case 'plugin_bash_overflow_script_tag_min_len': return 2;
+            case 'plugin_bash_overflow_script_tag_max_len': return 15;
+            case 'plugin_bash_overflow_script_example_min_len': return 0;
+            case 'plugin_bash_overflow_script_example_max_len': return 300;
+            case 'plugin_bash_overflow_script_comm_msg_min_len': return 5;
+            case 'plugin_bash_overflow_script_comm_msg_max_len': return 150;
+            case 'plugin_bash_overflow_script_git_regex': return '/^https:\/\/github\.com\/\S{1,39}\/\S{1,100}\.git/';
+            case 'plugin_bash_overflow_script_file_min_len': return 1;
+            case 'plugin_bash_overflow_script_file_max_len': return 150;
+            case 'plugin_bash_overflow_script_comm_min_len': return 6;
+            case 'plugin_bash_overflow_script_comm_max_len': return 40;
+            default: return null;
+        }
+    }
+
+    function admin_form(&$qa_content) {
+        require_once QA_INCLUDE_DIR . 'qa-app-options.php';
+
+        $saved = false;
+
+        if (qa_clicked('plugin_bash_overflow_save_button')) {
+            $this->save_option('plugin_bash_overflow_server_url', false);
+            $this->save_option('plugin_bash_overflow_script_name_min_len');
+            $this->save_option('plugin_bash_overflow_script_name_max_len');
+            $this->save_option('plugin_bash_overflow_script_desc_min_len');
+            $this->save_option('plugin_bash_overflow_script_desc_max_len');
+            $this->save_option('plugin_bash_overflow_script_tag_min_count');
+            $this->save_option('plugin_bash_overflow_script_tag_max_count');
+            $this->save_option('plugin_bash_overflow_script_tag_min_len');
+            $this->save_option('plugin_bash_overflow_script_tag_max_len');
+            $this->save_option('plugin_bash_overflow_script_example_min_len');
+            $this->save_option('plugin_bash_overflow_script_example_max_len');
+            $this->save_option('plugin_bash_overflow_script_comm_msg_min_len');
+            $this->save_option('plugin_bash_overflow_script_comm_msg_max_len');
+            $this->save_option('plugin_bash_overflow_script_git_regex', false);
+            $this->save_option('plugin_bash_overflow_script_file_min_len');
+            $this->save_option('plugin_bash_overflow_script_file_max_len');
+            $this->save_option('plugin_bash_overflow_script_comm_min_len');
+            $this->save_option('plugin_bash_overflow_script_comm_max_len');
+            $saved = true;
+        }
+
+        return array(
+            'ok' => $saved ? qa_lang_html('plugin_bash/admin_form_ok') : null,
+            'style' => 'wide',
+            'fields' => array(
+                $this->generate_field('plugin_bash_overflow_server_url', false, 'text'),
+                $this->generate_field('plugin_bash_overflow_script_name_min_len'),
+                $this->generate_field('plugin_bash_overflow_script_name_max_len'),
+                $this->generate_field('plugin_bash_overflow_script_desc_min_len'),
+                $this->generate_field('plugin_bash_overflow_script_desc_max_len'),
+                $this->generate_field('plugin_bash_overflow_script_tag_min_count', false),
+                $this->generate_field('plugin_bash_overflow_script_tag_max_count', false),
+                $this->generate_field('plugin_bash_overflow_script_tag_min_len'),
+                $this->generate_field('plugin_bash_overflow_script_tag_max_len'),
+                $this->generate_field('plugin_bash_overflow_script_example_min_len'),
+                $this->generate_field('plugin_bash_overflow_script_example_max_len'),
+                $this->generate_field('plugin_bash_overflow_script_comm_msg_min_len'),
+                $this->generate_field('plugin_bash_overflow_script_comm_msg_max_len'),
+                $this->generate_field('plugin_bash_overflow_script_git_regex', false, 'text'),
+                $this->generate_field('plugin_bash_overflow_script_file_min_len'),
+                $this->generate_field('plugin_bash_overflow_script_file_max_len'),
+                $this->generate_field('plugin_bash_overflow_script_comm_min_len'),
+                $this->generate_field('plugin_bash_overflow_script_comm_max_len'),
+            ),
+            'buttons' => array(
+                array(
+                    'label' => 'Save Changes',
+                    'tags' => 'NAME="plugin_bash_overflow_save_button"',
+                ),
+            ),
+        );
+    }
+
+    function generate_field($label, $suffix = true, $type = 'number') {
+        return array(
+            'label' => qa_lang_html('plugin_bash/' . $label),
+            'type' => $type,
+            'value' => qa_opt($label),
+            'suffix' => $suffix ? qa_lang_html('admin/characters') : null,
+            'tags' => 'NAME="' . $label . '"',
+        );
+    }
+
+    function save_option($option, $number = true) {
+        if ($number) {
+            qa_opt($option, (int) qa_post_text($option));
+        } else {
+            qa_opt($option, qa_post_text($option));
+        }
+    }
+
+}
