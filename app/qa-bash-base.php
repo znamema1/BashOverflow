@@ -299,8 +299,8 @@ function validate_script(&$script, $check_comm_msg) {
 }
 
 function validate_script_name(&$script) {
-    $min_len = qa_opt('plugin_bash_overflow_script_name_min_len');
-    $max_len = qa_opt('plugin_bash_overflow_script_name_max_len');
+    $min_len = qa_opt('bashoverflow_script_name_min_len');
+    $max_len = qa_opt('bashoverflow_script_name_max_len');
     $len = strlen($script['name']);
 
     if ($len < $min_len || $len > $max_len) {
@@ -313,8 +313,8 @@ function validate_script_name(&$script) {
 }
 
 function validate_script_desc(&$script) {
-    $min_len = qa_opt('plugin_bash_overflow_script_desc_min_len');
-    $max_len = qa_opt('plugin_bash_overflow_script_desc_max_len');
+    $min_len = qa_opt('bashoverflow_script_desc_min_len');
+    $max_len = qa_opt('bashoverflow_script_desc_max_len');
     $len = strlen($script['desc']);
 
     if ($len < $min_len || $len > $max_len) {
@@ -327,10 +327,10 @@ function validate_script_desc(&$script) {
 }
 
 function validate_script_tags(&$script) {
-    $min_count = qa_opt('plugin_bash_overflow_script_tag_min_count');
-    $max_count = qa_opt('plugin_bash_overflow_script_tag_max_count');
-    $min_len = qa_opt('plugin_bash_overflow_script_tag_min_len');
-    $max_len = qa_opt('plugin_bash_overflow_script_tag_max_len');
+    $min_count = qa_opt('bashoverflow_script_tag_min_count');
+    $max_count = qa_opt('bashoverflow_script_tag_max_count');
+    $min_len = qa_opt('bashoverflow_script_tag_min_len');
+    $max_len = qa_opt('bashoverflow_script_tag_max_len');
 
     $count = count($script['tags']);
 
@@ -357,8 +357,8 @@ function validate_script_tags(&$script) {
 }
 
 function validate_script_example_data(&$script) {
-    $min_len = qa_opt('plugin_bash_overflow_script_example_min_len');
-    $max_len = qa_opt('plugin_bash_overflow_script_example_max_len');
+    $min_len = qa_opt('bashoverflow_script_example_min_len');
+    $max_len = qa_opt('bashoverflow_script_example_max_len');
     $len = strlen($script['example_data']);
 
     if ($len < $min_len || $len > $max_len) {
@@ -371,8 +371,8 @@ function validate_script_example_data(&$script) {
 }
 
 function validate_script_comm_msg(&$script) {
-    $min_len = qa_opt('plugin_bash_overflow_script_comm_msg_min_len');
-    $max_len = qa_opt('plugin_bash_overflow_script_comm_msg_max_len');
+    $min_len = qa_opt('bashoverflow_script_comm_msg_min_len');
+    $max_len = qa_opt('bashoverflow_script_comm_msg_max_len');
     $len = strlen($script['comm_msg']);
 
     if ($len < $min_len || $len > $max_len) {
@@ -422,7 +422,7 @@ function validate_script_repo(&$repo) {
 }
 
 function validate_git(&$repo) {
-    $regex = qa_opt('plugin_bash_overflow_script_git_regex');
+    $regex = qa_opt('bashoverflow_script_git_regex');
     if (!preg_match_all($regex, $repo['git']) == 1) {
         $repo['git_error'] = strtr(qa_lang_html('plugin_bash/error_script_git_format'), array(
             '^1' => $regex));
@@ -433,8 +433,8 @@ function validate_git(&$repo) {
 }
 
 function validate_file(&$repo) {
-    $min_len = qa_opt('plugin_bash_overflow_script_file_min_len');
-    $max_len = qa_opt('plugin_bash_overflow_script_file_max_len');
+    $min_len = qa_opt('bashoverflow_script_file_min_len');
+    $max_len = qa_opt('bashoverflow_script_file_max_len');
     $len = strlen($repo['file']);
 
     if ($len < $min_len || $len > $max_len || substr($repo['file'], 0, 1) == '.') {
@@ -448,8 +448,8 @@ function validate_file(&$repo) {
 
 function validate_comm(&$repo) {
     
-    $min_len = qa_opt('plugin_bash_overflow_script_comm_min_len');
-    $max_len = qa_opt('plugin_bash_overflow_script_comm_max_len');
+    $min_len = qa_opt('bashoverflow_script_comm_min_len');
+    $max_len = qa_opt('bashoverflow_script_comm_max_len');
     $len = strlen($repo['comm']);
 
     if ($len < $min_len || $len > $max_len) {
