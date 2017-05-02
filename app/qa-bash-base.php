@@ -166,9 +166,10 @@ function get_scripts_by_date($is_mine, $start, $count) {
     if (isset($ret)) {
         qa_sort_by($ret, 'created');
         $ret = array_reverse($ret);
+        $ret = array_slice($ret, $start, $count);
     }
 
-    $ret = array_slice($ret, $start, $count);
+    
     return @$ret;
 }
 

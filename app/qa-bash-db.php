@@ -280,7 +280,7 @@ function init_db_tables($table_list) {
     ',
         'ALTER TABLE ^scripts ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
     ',
-        'ALTER TABLE ^versionsENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+        'ALTER TABLE ^versions ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
     ',
         'ALTER TABLE ^svotes ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
     ',
@@ -294,24 +294,24 @@ function init_db_tables($table_list) {
     ',
         'ALTER TABLE ^scripts ADD FOREIGN KEY (userid) REFERENCES ^users (userid);
     ',
-        'ALTER TABLE ^versionsADD FOREIGN KEY (scriptid) REFERENCES ^scripts (scriptid);
+        'ALTER TABLE ^versions ADD FOREIGN KEY (scriptid) REFERENCES ^scripts (scriptid) ON DELETE CASCADE;
     ',
-        'ALTER TABLE ^versionsADD FOREIGN KEY (editorid) REFERENCES ^users (userid);
+        'ALTER TABLE ^versions ADD FOREIGN KEY (editorid) REFERENCES ^users (userid);
     ',
         'ALTER TABLE ^svotes ADD FOREIGN KEY (userid) REFERENCES ^users (userid);
     ',
         'ALTER TABLE ^svotes ADD FOREIGN KEY (scriptid) REFERENCES ^scripts (scriptid);
     ',
-        'ALTER TABLE ^version_stags ADD FOREIGN KEY (versionid) REFERENCES ^ versions(versionid);
+        'ALTER TABLE ^version_stags ADD FOREIGN KEY (versionid) REFERENCES ^versions(versionid) ON DELETE CASCADE;
     ',
-        'ALTER TABLE ^version_stags ADD FOREIGN KEY (scriptid) REFERENCES ^ versions(scriptid);
+        'ALTER TABLE ^version_stags ADD FOREIGN KEY (scriptid) REFERENCES ^versions(scriptid) ON DELETE CASCADE;
     ',
         'ALTER TABLE ^version_stags ADD FOREIGN KEY (stagid) REFERENCES ^stags (stagid);
     ',
-        'ALTER TABLE ^version_repos ADD FOREIGN KEY (versionid) REFERENCES ^versions(versionid);
+        'ALTER TABLE ^version_repos ADD FOREIGN KEY (versionid) REFERENCES ^versions(versionid) ON DELETE CASCADE;
     ',
-        'ALTER TABLE ^version_repos ADD FOREIGN KEY (scriptid) REFERENCES ^versions(scriptid);
+        'ALTER TABLE ^version_repos ADD FOREIGN KEY (scriptid) REFERENCES ^versions(scriptid) ON DELETE CASCADE;
     ',
-        'ALTER TABLE ^version_repos ADD FOREIGN KEY (repoid) REFERENCES ^repos (repoid)'
+        'ALTER TABLE ^version_repos ADD FOREIGN KEY (repoid) REFERENCES ^repos (repoid);'
     );
 }
