@@ -17,24 +17,24 @@ class qa_bash_admin_page {
 
     function option_default($option) {
         switch ($option) {
-            case 'plugin_bash_overflow_server_url': return '127.0.0.1';
-            case 'plugin_bash_overflow_script_name_min_len': return 5;
-            case 'plugin_bash_overflow_script_name_max_len': return 40;
-            case 'plugin_bash_overflow_script_desc_min_len': return 0;
-            case 'plugin_bash_overflow_script_desc_max_len': return 400;
-            case 'plugin_bash_overflow_script_tag_min_count': return 0;
-            case 'plugin_bash_overflow_script_tag_max_count': return 5;
-            case 'plugin_bash_overflow_script_tag_min_len': return 2;
-            case 'plugin_bash_overflow_script_tag_max_len': return 15;
-            case 'plugin_bash_overflow_script_example_min_len': return 0;
-            case 'plugin_bash_overflow_script_example_max_len': return 300;
-            case 'plugin_bash_overflow_script_comm_msg_min_len': return 5;
-            case 'plugin_bash_overflow_script_comm_msg_max_len': return 150;
-            case 'plugin_bash_overflow_script_git_regex': return '/^https:\/\/github\.com\/\S{1,39}\/\S{1,100}\.git/';
-            case 'plugin_bash_overflow_script_file_min_len': return 1;
-            case 'plugin_bash_overflow_script_file_max_len': return 150;
-            case 'plugin_bash_overflow_script_comm_min_len': return 6;
-            case 'plugin_bash_overflow_script_comm_max_len': return 40;
+            case 'bashoverflow_server_url': return '127.0.0.1';
+            case 'bashoverflow_script_name_min_len': return 5;
+            case 'bashoverflow_script_name_max_len': return 40;
+            case 'bashoverflow_script_desc_min_len': return 0;
+            case 'bashoverflow_script_desc_max_len': return 400;
+            case 'bashoverflow_script_tag_min_count': return 0;
+            case 'bashoverflow_script_tag_max_count': return 5;
+            case 'bashoverflow_script_tag_min_len': return 2;
+            case 'bashoverflow_script_tag_max_len': return 15;
+            case 'bashoverflow_script_example_min_len': return 0;
+            case 'bashoverflow_script_example_max_len': return 300;
+            case 'bashoverflow_script_comm_msg_min_len': return 5;
+            case 'bashoverflow_script_comm_msg_max_len': return 150;
+            case 'bashoverflow_script_git_regex': return '/^https:\/\/github\.com\/\S{1,39}\/\S{1,100}\.git/';
+            case 'bashoverflow_script_file_min_len': return 1;
+            case 'bashoverflow_script_file_max_len': return 150;
+            case 'bashoverflow_script_comm_min_len': return 6;
+            case 'bashoverflow_script_comm_max_len': return 40;
             default: return null;
         }
     }
@@ -45,24 +45,24 @@ class qa_bash_admin_page {
         $saved = false;
 
         if (qa_clicked('plugin_bash_overflow_save_button')) {
-            $this->save_option('plugin_bash_overflow_server_url', false);
-            $this->save_option('plugin_bash_overflow_script_name_min_len');
-            $this->save_option('plugin_bash_overflow_script_name_max_len');
-            $this->save_option('plugin_bash_overflow_script_desc_min_len');
-            $this->save_option('plugin_bash_overflow_script_desc_max_len');
-            $this->save_option('plugin_bash_overflow_script_tag_min_count');
-            $this->save_option('plugin_bash_overflow_script_tag_max_count');
-            $this->save_option('plugin_bash_overflow_script_tag_min_len');
-            $this->save_option('plugin_bash_overflow_script_tag_max_len');
-            $this->save_option('plugin_bash_overflow_script_example_min_len');
-            $this->save_option('plugin_bash_overflow_script_example_max_len');
-            $this->save_option('plugin_bash_overflow_script_comm_msg_min_len');
-            $this->save_option('plugin_bash_overflow_script_comm_msg_max_len');
-            $this->save_option('plugin_bash_overflow_script_git_regex', false);
-            $this->save_option('plugin_bash_overflow_script_file_min_len');
-            $this->save_option('plugin_bash_overflow_script_file_max_len');
-            $this->save_option('plugin_bash_overflow_script_comm_min_len');
-            $this->save_option('plugin_bash_overflow_script_comm_max_len');
+            $this->save_option('bashoverflow_server_url', false);
+            $this->save_option('bashoverflow_script_name_min_len');
+            $this->save_option('bashoverflow_script_name_max_len');
+            $this->save_option('bashoverflow_script_desc_min_len');
+            $this->save_option('bashoverflow_script_desc_max_len');
+            $this->save_option('bashoverflow_script_tag_min_count');
+            $this->save_option('bashoverflow_script_tag_max_count');
+            $this->save_option('bashoverflow_script_tag_min_len');
+            $this->save_option('bashoverflow_script_tag_max_len');
+            $this->save_option('bashoverflow_script_example_min_len');
+            $this->save_option('bashoverflow_script_example_max_len');
+            $this->save_option('bashoverflow_script_comm_msg_min_len');
+            $this->save_option('bashoverflow_script_comm_msg_max_len');
+            $this->save_option('bashoverflow_script_git_regex', false);
+            $this->save_option('bashoverflow_script_file_min_len');
+            $this->save_option('bashoverflow_script_file_max_len');
+            $this->save_option('bashoverflow_script_comm_min_len');
+            $this->save_option('bashoverflow_script_comm_max_len');
             $saved = true;
         }
 
@@ -70,24 +70,24 @@ class qa_bash_admin_page {
             'ok' => $saved ? qa_lang_html('plugin_bash/admin_form_ok') : null,
             'style' => 'wide',
             'fields' => array(
-                $this->generate_field('plugin_bash_overflow_server_url', false, 'text'),
-                $this->generate_field('plugin_bash_overflow_script_name_min_len'),
-                $this->generate_field('plugin_bash_overflow_script_name_max_len'),
-                $this->generate_field('plugin_bash_overflow_script_desc_min_len'),
-                $this->generate_field('plugin_bash_overflow_script_desc_max_len'),
-                $this->generate_field('plugin_bash_overflow_script_tag_min_count', false),
-                $this->generate_field('plugin_bash_overflow_script_tag_max_count', false),
-                $this->generate_field('plugin_bash_overflow_script_tag_min_len'),
-                $this->generate_field('plugin_bash_overflow_script_tag_max_len'),
-                $this->generate_field('plugin_bash_overflow_script_example_min_len'),
-                $this->generate_field('plugin_bash_overflow_script_example_max_len'),
-                $this->generate_field('plugin_bash_overflow_script_comm_msg_min_len'),
-                $this->generate_field('plugin_bash_overflow_script_comm_msg_max_len'),
-                $this->generate_field('plugin_bash_overflow_script_git_regex', false, 'text'),
-                $this->generate_field('plugin_bash_overflow_script_file_min_len'),
-                $this->generate_field('plugin_bash_overflow_script_file_max_len'),
-                $this->generate_field('plugin_bash_overflow_script_comm_min_len'),
-                $this->generate_field('plugin_bash_overflow_script_comm_max_len'),
+                $this->generate_field('bashoverflow_server_url', false, 'text'),
+                $this->generate_field('bashoverflow_script_name_min_len'),
+                $this->generate_field('bashoverflow_script_name_max_len'),
+                $this->generate_field('bashoverflow_script_desc_min_len'),
+                $this->generate_field('bashoverflow_script_desc_max_len'),
+                $this->generate_field('bashoverflow_script_tag_min_count', false),
+                $this->generate_field('bashoverflow_script_tag_max_count', false),
+                $this->generate_field('bashoverflow_script_tag_min_len'),
+                $this->generate_field('bashoverflow_script_tag_max_len'),
+                $this->generate_field('bashoverflow_script_example_min_len'),
+                $this->generate_field('bashoverflow_script_example_max_len'),
+                $this->generate_field('bashoverflow_script_comm_msg_min_len'),
+                $this->generate_field('bashoverflow_script_comm_msg_max_len'),
+                $this->generate_field('bashoverflow_script_git_regex', false, 'text'),
+                $this->generate_field('bashoverflow_script_file_min_len'),
+                $this->generate_field('bashoverflow_script_file_max_len'),
+                $this->generate_field('bashoverflow_script_comm_min_len'),
+                $this->generate_field('bashoverflow_script_comm_max_len'),
             ),
             'buttons' => array(
                 array(
