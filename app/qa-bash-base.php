@@ -169,7 +169,7 @@ function get_scripts_by_date($is_mine, $start, $count) {
         $ret = array_slice($ret, $start, $count);
     }
 
-    
+
     return @$ret;
 }
 
@@ -220,8 +220,21 @@ function get_user_info_base($userid) {
     return qa_get_one_user_html($handle);
 }
 
-function run_script($script) {
-    // api connect
+function run_script($scriptid, $versionid, $datain) {
+    require_once __DIR__ . '/qa-bash-api-handler.php';
+    $repos = db_get_repos($scriptid, $versionid);
+    
+    if(!isset($repos)){
+        return null;
+    }
+
+    $data['repos'] = $repos;
+    $data['input'] = $datain;
+
+    db_update_run_count($scriptid);
+
+    $response = api_execute_script($data);
+    return json_decode($response, true);
 }
 
 function vote_script($userid, $scriptid, $vote) {
@@ -448,7 +461,7 @@ function validate_file(&$repo) {
 }
 
 function validate_comm(&$repo) {
-    
+
     $min_len = qa_opt('bashoverflow_script_comm_min_len');
     $max_len = qa_opt('bashoverflow_script_comm_max_len');
     $len = strlen($repo['comm']);

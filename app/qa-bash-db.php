@@ -179,6 +179,10 @@ function db_update_score($scriptid, $value) {
     qa_db_query_sub('UPDATE ^scripts SET score = score + # WHERE scriptid = #', $value, $scriptid);
 }
 
+function db_update_run_count($scriptid) {
+    qa_db_query_sub('UPDATE ^scripts SET run_count = run_count + 1 WHERE scriptid = #', $scriptid);
+}
+
 function db_get_count_user_script($userid) {
     $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM ^scripts WHERE userid = #', $userid);
     return qa_db_read_one_value($result);

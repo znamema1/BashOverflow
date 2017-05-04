@@ -9,12 +9,13 @@ const units = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
 var fileValid = false;
 var running = false;
 
-function runText(script_id, waiting_elem) {
+function runText(waiting_elem) {
     $.ajax({
-        url: qa_root + 'ajax_run_page_text/' + script_id,
+        url: qa_root + 'ajax_run_page_text',
         type: 'POST',
         data: {
-//            scriptid: script_id,
+            scriptid: script_id,
+            versionid: version_id,
             datain: $('#datain').val()
         },
         success: showResult,
@@ -38,16 +39,17 @@ function getNiceSize(fileSize) {
     return fileSize + ' ' + units[i] + 'B';
 }
 
-function runFile(script_id, waiting_elem) {
+function runFile(waiting_elem) {
     var file = $('#filein')[0].files[0]; //Files[0] = 1st file
     var reader = new FileReader();
     reader.readAsText(file, 'UTF-8');
     reader.onload = function (event) {
         $.ajax({
-            url: qa_root + 'ajax_run_page_file/' + script_id,
+            url: qa_root + 'ajax_run_page_file',
             type: 'POST',
             data: {
-//                scriptid: script_id,
+                scriptid: script_id,
+                versionid: version_id,
                 fileName: file.name,
                 content: event.target.result
             },
@@ -79,8 +81,6 @@ function handleInput(elem) {
     }
     running = true;
 
-    var parts = window.location.href.split('/');
-    var scriptid = parts[parts.length - 1];
     var runFn;
     if (fileValid) {
         runFn = runFile;
@@ -92,7 +92,7 @@ function handleInput(elem) {
         return false;
     }
 
-    if (runFn(scriptid, elem)) {
+    if (runFn(elem)) {
         qa_show_waiting_after(elem, false);
     } else {
         running = false;

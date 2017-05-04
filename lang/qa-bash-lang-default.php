@@ -22,6 +22,7 @@ return array(
     'edit_script_userid_error' => 'Please ^1log in^2 or ^3register^4 to modify script!',
     'run_script_title' => 'Run script',
     'run_script_error' => 'No script selected to run!',
+    'run_script_internal_error' => 'Internal error',
     'run_script_label_datain' => 'Input data',
     'run_script_label_filein' => 'Upload file',
     'run_script_label_dataout' => 'Processed data',

@@ -32,12 +32,17 @@ class qa_bash_run_page {
         $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-run.js';
         $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-vote.js';
 
+        $qa_content['script_var']['script_id'] = $scriptid;
+        $qa_content['script_var']['version_id'] = 2;
         if (!isset($scriptid)) {
             $qa_content['error'] = qa_lang_html('main/page_not_found');
             return $qa_content;
         }
 
         $script = get_script($scriptid, $version);
+        
+        $qa_content['script_var']['script_id'] = $scriptid;
+        $qa_content['script_var']['version_id'] = $script['selected_version'];
 
         if (!isset($script)) {
             $qa_content['error'] = qa_lang_html('plugin_bash/run_script_error');
