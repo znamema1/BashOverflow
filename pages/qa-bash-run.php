@@ -40,7 +40,7 @@ class qa_bash_run_page {
         }
 
         $script = get_script($scriptid, $version);
-        
+
         $qa_content['script_var']['script_id'] = $scriptid;
         $qa_content['script_var']['version_id'] = $script['selected_version'];
 
@@ -49,7 +49,7 @@ class qa_bash_run_page {
             return $qa_content;
         }
 
-        $qa_content['title'] = qa_html($script['name']);
+        $qa_content['title'] = '<a href="../script/' . $scriptid . '">' . qa_html($script['name']) . '</a>';
 
         if (qa_clicked('dorun')) {
             $this->afterrun = true;
