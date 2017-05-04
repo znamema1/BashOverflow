@@ -8,44 +8,53 @@ class qa_bash_ajax_run_page_file {
     }
 
     function process_request($request) {
-        $parts = explode('/', $request);
-        $scriptid = $parts[1];
+
+        require_once __DIR__ . '/../app/qa-bash-base.php';
+        $scriptid = qa_post_text('scriptid');
+        $versionid = qa_post_text('versionid');
         $content = qa_post_text('content');
         $name = qa_post_text('fileName');
-        $version_id = qa_get('ver');
 
-        echo '<form method="POST">
-                            <table class="qa-form-tall-table">
-                                    <tbody><tr>
-                                            <td class="qa-form-tall-label">
-                                                    Processed data
-                                            </td>
-                                    </tr>
-                                    <tr>
-                                            <td class="qa-form-tall-data">
-                                                    <textarea name="dataout" id="dataout" rows="10" cols="40" class="qa-form-tall-text" readonly>Script ID: ' . $scriptid .', version ID: '.@$version_id.'
-File name: ' . $name . '
-Content: ' . $content . '</textarea>
-                                            </td>
-                                    </tr>
-                                    <tr>
-                                            <td class="qa-form-tall-data">
-                                                    <a id="outputdl" href="data:text/plain;charset=utf-8,'.$content.'" type="text/plain" download="output.txt">Download output</a>
-                                            </td>
-                                    </tr>
-                                    <tr>
-                                            <td class="qa-form-tall-label">
-                                                    Don\'t forget to vote this script!
-                                            </td>
-                                    </tr>
-                                    <tr>
-                                            <td class="qa-form-tall-data">
-                                                    <span class="qa-form-tall-static"></span>
-                                            </td>
-                                    </tr>
-                            </tbody></table>
-                    </form>';
-        return null;
+        $result = run_script($scriptid, $versionid, $content);
+
+        if (!isset($result) || !isset($result['status'])) {
+            $response = $this->get_error_response(qa_lang_html('plugin_bash/run_script_internal_error'));
+        } elseif ($result['status'] == 'OK') {
+            $response = $this->get_response($result['content']);
+        } else {
+            $response = $this->get_error_response($result['errorMessage']);
+        }
+        echo $response;
+    }
+    
+    function get_error_response($err) {
+        echo '<div class="qa-error">' . qa_html($err, true) . '</div>';
+    }
+
+    function get_response(&$content) {
+        $themeclass = qa_load_theme_class(qa_get_site_theme(), null, null, null);
+        $themeclass->initialize();
+
+        $themeclass->form($this->generate_array($content), 1);
+    }
+
+    function generate_array(&$content) {
+        return array(
+            'style' => 'tall',
+            'fields' => array(
+                array(
+                    'type' => 'textarea',
+                    'rows' => 10,
+                    'tags' => 'NAME="dataout" ID="dataout"',
+                    'label' => qa_lang_html('plugin_bash/run_script_label_dataout'),
+                    'value' => $content,
+                ),
+                array(
+                    'type' => 'static',
+                    'label' => qa_lang_html('plugin_bash/run_script_vote'),
+                ),
+            )
+        );
     }
 
 }
