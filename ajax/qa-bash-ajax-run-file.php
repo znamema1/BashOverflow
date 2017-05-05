@@ -26,7 +26,7 @@ class qa_bash_ajax_run_page_file {
         }
         echo $response;
     }
-    
+
     function get_error_response($err) {
         echo '<div class="qa-error">' . qa_html($err, true) . '</div>';
     }
@@ -42,17 +42,21 @@ class qa_bash_ajax_run_page_file {
         return array(
             'style' => 'tall',
             'fields' => array(
-                array(
+                /*array(
                     'type' => 'textarea',
                     'rows' => 10,
                     'tags' => 'NAME="dataout" ID="dataout"',
                     'label' => qa_lang_html('plugin_bash/run_script_label_dataout'),
-                    'value' => $content,
-                ),
+                    'value' => @$content,
+                ),*/
                 array(
                     'type' => 'static',
                     'label' => qa_lang_html('plugin_bash/run_script_vote'),
                 ),
+                array(
+                    'type' => 'custom',
+                    'label' => '<a id="outputdl" href="data:text/plain;charset=utf-8,' . @$content . '" type="text/plain" download="output.txt">'.qa_lang_html('plugin_bash/run_script_download_output').'</a>',
+                )
             )
         );
     }

@@ -28,6 +28,7 @@ return array(
     'run_script_label_dataout' => 'Processed data',
     'run_script_run_button' => 'Run script',
     'run_script_vote' => 'Don\'t forget to vote this script!',
+    'run_script_download_output' => 'Download output',
     'detail_script_version_label' => 'version ',
     'detail_script_exec_label' => ' runs',
     'detail_script_title' => 'List of scripts',
