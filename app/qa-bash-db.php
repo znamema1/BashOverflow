@@ -149,7 +149,9 @@ function db_get_scripts() {
 function db_get_scripts_by_q($q, $start, $count) {
     $result = qa_db_query_sub('Select s.scriptid, v.versionid  FROM '
             . '^scripts s JOIN ^versions v ON s.scriptid = v.scriptid AND s.last_version = v.versionid '
-            . 'WHERE v.name LIKE $ OR v.description LIKE $ LIMIT #,#', '%' . $q . '%', '%' . $q . '%', $start, $count);
+            . 'WHERE MATCH(v.name, v.description) AGAINST($ IN BOOLEAN MODE) '
+            . 'ORDER BY MATCH(v.name, v.description) AGAINST($ IN BOOLEAN MODE) LIMIT #,#', $q, $q, $start, $count);
+
     return qa_db_read_all_assoc($result);
 }
 
@@ -316,6 +318,8 @@ function init_db_tables($table_list) {
     ',
         'ALTER TABLE ^version_repos ADD FOREIGN KEY (scriptid) REFERENCES ^versions(scriptid) ON DELETE CASCADE;
     ',
-        'ALTER TABLE ^version_repos ADD FOREIGN KEY (repoid) REFERENCES ^repos (repoid);'
+        'ALTER TABLE ^version_repos ADD FOREIGN KEY (repoid) REFERENCES ^repos (repoid);
+    ',
+        'ALTER TABLE ^versions ADD FULLTEXT search (name,description);'
     );
 }
