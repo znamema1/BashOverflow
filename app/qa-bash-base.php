@@ -223,8 +223,8 @@ function get_user_info_base($userid) {
 function run_script($scriptid, $versionid, $datain) {
     require_once __DIR__ . '/qa-bash-api-handler.php';
     $repos = db_get_repos($scriptid, $versionid);
-    
-    if(!isset($repos)){
+
+    if (!isset($repos)) {
         return null;
     }
 
@@ -238,14 +238,20 @@ function run_script($scriptid, $versionid, $datain) {
 }
 
 function vote_script($userid, $scriptid, $vote) {
+    require_once QA_INCLUDE_DIR . 'db/points.php';
     $old_vote = db_get_user_vote($userid, $scriptid);
+    $script_owner = db_get_script_owner($scriptid);
     $value = $vote == 'up' ? 1 : -1;
     if (isset($old_vote)) {
         db_remove_vote($userid, $scriptid);
         db_update_score($scriptid, $value * -1);
+        db_add_user_points($script_owner, $value * -1);
+        qa_db_points_update_ifuser($script_owner, null);
     } else {
         db_create_vote($userid, $scriptid, $value);
         db_update_score($scriptid, $value);
+        db_add_user_points($script_owner, $value);
+        qa_db_points_update_ifuser($script_owner, null);
     }
     return db_get_script_score($scriptid);
 }
