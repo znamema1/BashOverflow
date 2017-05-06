@@ -27,8 +27,7 @@ class qa_bash_search_page {
         }
         $qa_content['title'] = qa_lang_html_sub('plugin_bash/search_title_x', $q);
         $qa_content['search']['value'] = @qa_get('q');
-        $qa_content['search']['form_tags'] = 'method="get" action="./script_search" ';
-
+        
         $pagesize = qa_opt('page_size_tag_qs');
         $scripts = search_scripts($q, $start, $pagesize);
 

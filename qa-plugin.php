@@ -84,6 +84,12 @@ qa_register_plugin_layer(
 );
 
 qa_register_plugin_layer(
+        'layers/qa-bash-search-layer.php', // PHP file containing layer
+        'Layer for search redirection' // human-readable name of layer
+);
+
+
+qa_register_plugin_layer(
         'layers/qa-bash-activity-layer.php', // PHP file containing layer
         'Layer for user profile' // human-readable name of layer
 );
