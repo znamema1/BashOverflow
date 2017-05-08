@@ -1,10 +1,7 @@
-// global constants
-const ANIM_DUR = 400;
+/* global qa_root, version_id, script_id, err_send, parseFloat, err_run, err_nodata, file_type, err_file_type_tit, max_file_sizele, er, max_file_size, err_file_size_titler_file_type_msg, err_file_type_msg, err_file_type_title, err_file_size_title, err_file_size_msg */
 
-// local constants
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const FILE_TYPE = "text/plain";
 const units = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
+const ANIM_DUR = 400;
 
 var fileValid = false;
 var running = false;
@@ -20,7 +17,7 @@ function runText(waiting_elem) {
         },
         success: showResult,
         error: function (err) {
-            alert("Error while sending data!");
+            alert(err_send);
         },
         complete: prepareDone(waiting_elem)
     });
@@ -60,7 +57,7 @@ function runFile(waiting_elem) {
                 });
             },
             error: function (err) {
-                alert("Error while sending data!");
+                alert(err_send);
             },
             complete: prepareDone(waiting_elem)
         });
@@ -68,7 +65,7 @@ function runFile(waiting_elem) {
     reader.onerror = function (event) {
         alert("Error while reading file");
         return false;
-    }
+    };
 
     return true;
 }
@@ -76,7 +73,7 @@ function runFile(waiting_elem) {
 
 function handleInput(elem) {
     if (running) {
-        alert("A run is being executed!");
+        alert(err_run);
         return;
     }
     running = true;
@@ -87,7 +84,7 @@ function handleInput(elem) {
     } else if ($('#datain').val().length > 0) {
         runFn = runText;
     } else {
-        alert("No valid input!");
+        alert(err_nodata);
         running = false;
         return false;
     }
@@ -131,26 +128,26 @@ $(document).ready(function () {
         var $msgElem = $('#' + filemsgID);
 
         fileValid = false;
-        if (evt.target.files.length == 0) {
+        if (evt.target.files.length === 0) {
             $msgElem.fadeOut(ANIM_DUR);
             return;
         }
 
         var file = evt.target.files[0]; //Files[0] = 1st file
 
-        if (file.type != FILE_TYPE) {
-            msg = 'Only ' + FILE_TYPE + ' type supported.';
-            title = 'You provided: ' + (file.type.length > 0 ? file.type : "<unknown>" );
-        } else if (file.size > MAX_FILE_SIZE) {
-            msg = 'Maximum allowed size is ' + getNiceSize(MAX_FILE_SIZE) + '.';
-            title = 'Your file is too large: ' + getNiceSize(file.size);
+        if (file.type != file_type) {
+            msg = err_file_type_msg;
+            title = err_file_type_title + ' ' + (file.type.length > 0 ? file.type : "<unknown>");
+        } else if (file.size > max_file_size) {
+            msg = err_file_size_msg + ' ' + getNiceSize(max_file_size) + '.';
+            title = err_file_size_title + ' ' + getNiceSize(file.size);
         } else {
             msg = getNiceSize(file.size);
             title = "Your file is approved";
             fileValid = true;
         }
 
-        $msgElem.fadeOut(ANIM_DUR/2, function () {
+        $msgElem.fadeOut(ANIM_DUR / 2, function () {
             $msgElem.html(msg);
             $msgElem.attr("title", title);
             if (!fileValid) {
@@ -158,7 +155,7 @@ $(document).ready(function () {
             } else {
                 $msgElem.removeClass("qa-error");
             }
-            $msgElem.fadeIn(ANIM_DUR/2);
+            $msgElem.fadeIn(ANIM_DUR / 2);
         });
     });
 });

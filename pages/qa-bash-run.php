@@ -31,9 +31,17 @@ class qa_bash_run_page {
         $qa_content = qa_content_prepare();
         $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-run.js';
         $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-vote.js';
+        $qa_content['script_var']['max_file_size'] = 10 * 1024 * 1024;
+        $qa_content['script_var']['file_type'] = 'text/plain';
+        $qa_content['script_var']['err_nodata'] = qa_lang_html('plugin_bash/run_script_error_nodata');
+        $qa_content['script_var']['err_send'] = qa_lang_html('plugin_bash/run_script_error_send');
+        $qa_content['script_var']['err_run'] = qa_lang_html('plugin_bash/run_script_error_run');
+        $qa_content['script_var']['err_send'] = qa_lang_html('plugin_bash/run_script_error_send');
+        $qa_content['script_var']['err_file_type_title'] = qa_lang_html('plugin_bash/run_script_error_type_title');
+        $qa_content['script_var']['err_file_type_msg'] = strtr(qa_lang_html('plugin_bash/run_script_error_type_msg'), array('^1' => 'text/plain'));
+        $qa_content['script_var']['err_file_size_title'] = qa_lang_html('plugin_bash/run_script_error_size_title');
+        $qa_content['script_var']['err_file_size_msg'] = qa_lang_html('plugin_bash/run_script_error_size_msg');
 
-        $qa_content['script_var']['script_id'] = $scriptid;
-        $qa_content['script_var']['version_id'] = 2;
         if (!isset($scriptid)) {
             $qa_content['error'] = qa_lang_html('main/page_not_found');
             return $qa_content;
