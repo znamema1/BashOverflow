@@ -9,7 +9,7 @@ class qa_bash_admin_page {
     function process_request($request) {
         return null;
     }
-    
+
     public function init_queries($table_list) {
         require_once __DIR__ . '/../app/qa-bash-db.php';
         return init_db_tables($table_list);
@@ -18,6 +18,7 @@ class qa_bash_admin_page {
     function option_default($option) {
         switch ($option) {
             case 'bashoverflow_server_url': return '127.0.0.1';
+            case 'bashoverflow_max_linked_scripts': return 5;
             case 'bashoverflow_script_name_min_len': return 5;
             case 'bashoverflow_script_name_max_len': return 40;
             case 'bashoverflow_script_desc_min_len': return 0;
@@ -47,6 +48,7 @@ class qa_bash_admin_page {
 
         if (qa_clicked('plugin_bash_overflow_save_button')) {
             $this->save_option('bashoverflow_server_url', false);
+            $this->save_option('bashoverflow_max_linked_scripts');
             $this->save_option('bashoverflow_script_name_min_len');
             $this->save_option('bashoverflow_script_name_max_len');
             $this->save_option('bashoverflow_script_desc_min_len');
@@ -73,6 +75,7 @@ class qa_bash_admin_page {
             'style' => 'wide',
             'fields' => array(
                 $this->generate_field('bashoverflow_server_url', false, 'text'),
+                $this->generate_field('bashoverflow_max_linked_scripts', false),
                 $this->generate_field('bashoverflow_script_name_min_len'),
                 $this->generate_field('bashoverflow_script_name_max_len'),
                 $this->generate_field('bashoverflow_script_desc_min_len'),

@@ -21,6 +21,7 @@ class qa_bash_create_page {
         $parts = explode('/', $request);
         $mode = $parts[0];
         $userid = qa_get_logged_in_userid();
+        $max_script_count = qa_opt('bashoverflow_max_linked_scripts');
 
         $qa_content = qa_content_prepare();
         if (!isset($userid)) {
@@ -35,6 +36,7 @@ class qa_bash_create_page {
 
         $qa_content['script_src'][] = $this->urltoroot . '/JS/qa-bash-create.js';
         $qa_content['css_src'][] = $this->urltoroot . '/CSS/qa-bash-create.css';
+        $qa_content['script_var']['max_script_count'] = $max_script_count;
 
         if ($mode === $this->EDIT_MODE) {
             $qa_content['title'] = qa_lang_html('plugin_bash/edit_script_title');
@@ -65,7 +67,7 @@ class qa_bash_create_page {
         }
 
         if (qa_clicked('dosave')) {
-            $script = $this->load_script();
+            $script = $this->load_script($max_script_count);
 
             $validation_ok = validate_script($script, $mode === $this->EDIT_MODE);
 
@@ -185,7 +187,7 @@ class qa_bash_create_page {
         return $fields;
     }
 
-    function load_script() {
+    function load_script($max_script_count) {
         $script['name'] = qa_post_text('scriptname');
         $script['desc'] = qa_post_text('scriptdesc');
         $script['tags'] = $this->load_tags();
@@ -193,7 +195,7 @@ class qa_bash_create_page {
         $script['comm_msg'] = qa_post_text('comm_msg');
         $repos = array();
         $counter = qa_post_text('counter');
-        for ($i = 1; $i < $counter; $i++) {
+        for ($i = 1; $i < $counter && $i <= $max_script_count; $i++) {
             $repos[] = array(
                 'git' => qa_post_text('scriptgit' . $i),
                 'file' => qa_post_text('scriptfile' . $i),
