@@ -445,7 +445,7 @@ function validate_git(&$repo) {
     $regex = qa_opt('bashoverflow_script_git_regex');
     if (!preg_match_all($regex, $repo['git']) == 1) {
         $repo['git_error'] = strtr(qa_lang_html('plugin_bash/error_script_git_format'), array(
-            '^1' => $regex));
+            '^1' => qa_html(qa_opt('bashoverflow_script_git_template'))));
         return false;
     } else {
         return true;

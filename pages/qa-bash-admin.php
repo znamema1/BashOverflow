@@ -30,6 +30,7 @@ class qa_bash_admin_page {
             case 'bashoverflow_script_example_max_len': return 300;
             case 'bashoverflow_script_comm_msg_min_len': return 5;
             case 'bashoverflow_script_comm_msg_max_len': return 150;
+            case 'bashoverflow_script_git_template': return 'https://github.com/user/repo.git';
             case 'bashoverflow_script_git_regex': return '/^https:\/\/github\.com\/\S{1,39}\/\S{1,100}\.git/';
             case 'bashoverflow_script_file_min_len': return 1;
             case 'bashoverflow_script_file_max_len': return 150;
@@ -58,6 +59,7 @@ class qa_bash_admin_page {
             $this->save_option('bashoverflow_script_example_max_len');
             $this->save_option('bashoverflow_script_comm_msg_min_len');
             $this->save_option('bashoverflow_script_comm_msg_max_len');
+            $this->save_option('bashoverflow_script_git_template', false);
             $this->save_option('bashoverflow_script_git_regex', false);
             $this->save_option('bashoverflow_script_file_min_len');
             $this->save_option('bashoverflow_script_file_max_len');
@@ -83,6 +85,7 @@ class qa_bash_admin_page {
                 $this->generate_field('bashoverflow_script_example_max_len'),
                 $this->generate_field('bashoverflow_script_comm_msg_min_len'),
                 $this->generate_field('bashoverflow_script_comm_msg_max_len'),
+                $this->generate_field('bashoverflow_script_git_template', false, 'text'),
                 $this->generate_field('bashoverflow_script_git_regex', false, 'text'),
                 $this->generate_field('bashoverflow_script_file_min_len'),
                 $this->generate_field('bashoverflow_script_file_max_len'),
