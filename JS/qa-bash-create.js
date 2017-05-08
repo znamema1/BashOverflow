@@ -3,7 +3,7 @@ const ANIM_DUR = 400;
 
 // local constants
 const COUNTER_MIN = 2;
-const COUNTER_MAX = 10;
+const COUNTER_MAX = max_script_count;
 const BTN_DISABLE = "qa-btn-disabled";
 
 function getCounter() {
