@@ -72,11 +72,10 @@ class qa_bash_list_page {
     function suggest_html() {
         return strtr(
                 qa_lang_html('plugin_bash/stags_suggest'), array(
-            '^1' => '<a href="' . qa_path_html('scripts') . '">',
+            '^1' => '<a href="' . qa_path_html('create_script') . '">',
             '^2' => '</a>',
-            '^3' => '<a href="' . qa_path_html('stags') . '">',
-            '^4' => '</a>',
-        ));
+                )
+        );
     }
 
 }

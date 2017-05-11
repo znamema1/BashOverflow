@@ -43,7 +43,7 @@ class qa_bash_ajax_run_page_text {
                 array(
                     'type' => 'textarea',
                     'rows' => 10,
-                    'tags' => 'NAME="dataout" ID="dataout"',
+                    'tags' => 'NAME="dataout" ID="dataout" readonly',
                     'label' => qa_lang_html('plugin_bash/run_script_label_dataout'),
                     'value' => $content,
                 ),

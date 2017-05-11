@@ -20,7 +20,7 @@ function db_create_script($userid) {
 function db_create_version($userid, $scriptid, $script, $versionid = 1) {
     qa_db_query_sub(
             'INSERT INTO ^versions(versionid, scriptid, created, editorid, description, example, commitmsg, name)'
-            . ' VALUES ($,$,NOW(),$,$,$,$,$)', $versionid, $scriptid, $userid, $script['desc'], $script['example_data'], @$script['example_data'], $script['name']);
+            . ' VALUES ($,$,NOW(),$,$,$,$,$)', $versionid, $scriptid, $userid, $script['desc'], $script['example_data'], @$script['comm_msg'], $script['name']);
     return $versionid;
 }
 

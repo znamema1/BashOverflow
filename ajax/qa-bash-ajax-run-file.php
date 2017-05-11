@@ -42,13 +42,6 @@ class qa_bash_ajax_run_page_file {
         return array(
             'style' => 'tall',
             'fields' => array(
-                /*array(
-                    'type' => 'textarea',
-                    'rows' => 10,
-                    'tags' => 'NAME="dataout" ID="dataout"',
-                    'label' => qa_lang_html('plugin_bash/run_script_label_dataout'),
-                    'value' => @$content,
-                ),*/
                 array(
                     'type' => 'static',
                     'label' => qa_lang_html('plugin_bash/run_script_vote'),

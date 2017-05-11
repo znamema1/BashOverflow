@@ -3,9 +3,10 @@
 require_once QA_INCLUDE_DIR . 'qa-base.php';
 
 function api_execute_script($data) {
-    
-    $json = json_encode($data); 
-    return callAPI("http://localhost:8080/Executor-1.0/runner", $json);
+    $url = qa_opt('bashoverflow_server_url');
+    $json = json_encode($data);
+
+    return callAPI($url, $json);
 }
 
 function callAPI($url, $data) {

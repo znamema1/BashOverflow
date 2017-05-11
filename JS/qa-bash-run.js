@@ -53,7 +53,10 @@ function runFile(waiting_elem) {
             success: function (data) {
                 showResult(data);
                 $('#output').promise().done(function () {
-                    $('#outputdl')[0].click();
+                    var link = $('#outputdl')[0];
+                    if (typeof link !== 'undefined') {
+                        link.click();
+                    }
                 });
             },
             error: function (err) {

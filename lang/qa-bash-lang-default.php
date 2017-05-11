@@ -92,7 +92,7 @@ return array(
     'profile_edited_scripts' => 'Edited scripts:',
     'profile_scripts_label' => 'scripts',
     // admin form
-    'admin_form_ok' => 'Bash OverFlow settings saved',
+    'admin_form_ok' => 'BashOverflow settings saved',
     'bashoverflow_server_url' => 'Execute server URL:',
     'bashoverflow_max_linked_scripts' => 'Max count of linked scripts:',
     'bashoverflow_script_name_min_len' => 'Script name min lenght:',
