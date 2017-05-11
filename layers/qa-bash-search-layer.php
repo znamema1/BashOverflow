@@ -4,6 +4,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
     function doctype() {
         global $qa_request;
+        $parts = explode('/', $qa_request);
 
         $script_pages = array(
             'create_script',
@@ -15,8 +16,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
             'stag',
             'stags',
         );
-
-        if (in_array($qa_request, $script_pages)) {
+        if (in_array($parts[0], $script_pages)) {
             $this->content['search']['form_tags'] = 'method="get" action="./script_search"';
             $this->content['search']['field_tags'] .= 'placeholder="' . qa_lang_html('plugin_bash/nav_sub_search_script') . '"';
         } else {
