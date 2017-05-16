@@ -3,7 +3,7 @@
 /*
   Plugin Name: BashOverflow plugin
   Plugin URI:
-  Plugin Description: Extends the functionality of Q2A by script managing.
+  Plugin Description: Extends the functionality of Q2A by script management.
   Plugin Version: 0.5
   Plugin Date: 2017-04-16
   Plugin Author: Martin Znamenáček
@@ -17,6 +17,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
     header('Location: ../../');
     exit;
 }
+
+
+// pages
 qa_register_plugin_module(
         'page', // type of module
         'pages/qa-bash-create.php', // PHP file containing module class
@@ -69,11 +72,15 @@ qa_register_plugin_module(
         'Admin page' // human-readable name of module
 );
 
+
+// lang files
 qa_register_plugin_phrases(
         'lang/qa-bash-lang-*.php', // pattern for language files
         'plugin_bash' // prefix to retrieve phrases
 );
 
+
+// layers
 qa_register_plugin_layer(
         'layers/qa-bash-html-layer.php', // PHP file containing layer
         'Layer for HTML generation of s-view and s-list' // human-readable name of layer
@@ -88,11 +95,13 @@ qa_register_plugin_layer(
         'Layer for search redirection' // human-readable name of layer
 );
 
-
 qa_register_plugin_layer(
         'layers/qa-bash-activity-layer.php', // PHP file containing layer
         'Layer for user profile' // human-readable name of layer
 );
+
+
+// ajax pages
 qa_register_plugin_module(
         'page', // type of module
         'ajax/qa-bash-ajax-create.php', // PHP file containing module class

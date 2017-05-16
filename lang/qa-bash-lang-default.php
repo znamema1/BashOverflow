@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: EN language phrases for BashOverflow.
+ */
+
 return array(
     'create_script_title' => 'Create script',
     'create_script_name' => 'Script name',
@@ -91,27 +96,33 @@ return array(
     'profile_created_scripts' => 'Created scripts:',
     'profile_edited_scripts' => 'Edited scripts:',
     'profile_scripts_label' => 'scripts',
+    'owned' => 'owned',
+    'by' => 'by',
+    'edited' => 'edited',
+    'script' => 'Script',
     // admin form
     'admin_form_ok' => 'BashOverflow settings saved',
-    'bashoverflow_server_url' => 'Execute server URL:',
-    'bashoverflow_max_linked_scripts' => 'Max count of linked scripts:',
-    'bashoverflow_script_name_min_len' => 'Script name min lenght:',
-    'bashoverflow_script_name_max_len' => 'Script name max lenght:',
-    'bashoverflow_script_desc_min_len' => 'Script description min lenght:',
-    'bashoverflow_script_desc_max_len' => 'Script description max lenght:',
-    'bashoverflow_script_tag_min_count' => 'Script tags min count :',
+    'bashoverflow_server_url' => 'Executor server URL:',
+    'bashoverflow_create_points' => 'Reward for script creation:',
+    'bashoverflow_edit_points' => 'Reward for script editation:',
+    'bashoverflow_max_linked_scripts' => 'Max count of chained scripts:',
+    'bashoverflow_script_name_min_len' => 'Script name min length:',
+    'bashoverflow_script_name_max_len' => 'Script name max length:',
+    'bashoverflow_script_desc_min_len' => 'Script description min length:',
+    'bashoverflow_script_desc_max_len' => 'Script description max length:',
+    'bashoverflow_script_tag_min_count' => 'Script tags min count:',
     'bashoverflow_script_tag_max_count' => 'Script tags max count:',
-    'bashoverflow_script_tag_min_len' => 'Script tag min lenght:',
-    'bashoverflow_script_tag_max_len' => 'Script tag max lenght:',
-    'bashoverflow_script_example_min_len' => 'Script example data min lenght:',
-    'bashoverflow_script_example_max_len' => 'Script example data max lenght:',
-    'bashoverflow_script_comm_msg_min_len' => 'Script commit message min lenght:',
-    'bashoverflow_script_comm_msg_max_len' => 'Script commit message max lenght:',
-    'bashoverflow_script_git_template' => 'Human readable GitHub link requirements:',
-    'bashoverflow_script_git_regex' => 'GitHub link string regex:',
-    'bashoverflow_script_file_min_len' => 'Script file min lenght:',
-    'bashoverflow_script_file_max_len' => 'Script file max lenght:',
-    'bashoverflow_script_comm_min_len' => 'Script commit min lenght:',
-    'bashoverflow_script_comm_max_len' => 'Script commit max lenght:',
+    'bashoverflow_script_tag_min_len' => 'Script tag min length:',
+    'bashoverflow_script_tag_max_len' => 'Script tag max length:',
+    'bashoverflow_script_example_min_len' => 'Script example data min length:',
+    'bashoverflow_script_example_max_len' => 'Script example data max length:',
+    'bashoverflow_script_comm_msg_min_len' => 'Script commit message min length:',
+    'bashoverflow_script_comm_msg_max_len' => 'Script commit message max length:',
+    'bashoverflow_script_git_template' => 'Human readable Git repository link requirements:',
+    'bashoverflow_script_git_regex' => 'Git repository link string regex:',
+    'bashoverflow_script_file_min_len' => 'Script file min length:',
+    'bashoverflow_script_file_max_len' => 'Script file max length:',
+    'bashoverflow_script_comm_min_len' => 'Script commit min length:',
+    'bashoverflow_script_comm_max_len' => 'Script commit max length:',
 );
 

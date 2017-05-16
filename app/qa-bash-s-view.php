@@ -1,14 +1,22 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Help class for s-view configuration.
+ */
+
+/*
+ * Generates s-view configuration from script.
+ */
 function generate_s_view_content($script) {
     $authorinfo = qa_db_single_select(qa_db_user_account_selectspec($script['author'], true));
     $editorinfo = qa_db_single_select(qa_db_user_account_selectspec($script['editor'], true));
 
-    $s_view['what'] = qa_html('owned');
-    $s_view['who'] = qa_html(' by ') . get_user_info($script['author']) . qa_html(' (' . $authorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
-    $s_view['what_2'] = qa_html('edited');
+    $s_view['what'] = qa_lang_html('plugin_bash/owned');
+    $s_view['who'] = qa_lang_html('plugin_bash/by') .' '. get_user_info($script['author']) . qa_html(' (' . $authorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
+    $s_view['what_2'] = qa_lang_html('plugin_bash/edited');
     $s_view['when_2'] = qa_when_to_html($script['edit_date'], @$options['fulldatedays']);
-    $s_view['who_2'] = qa_html('by ') . get_user_info($script['editor']) . qa_html(' (' . $editorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
+    $s_view['who_2'] = qa_lang_html('plugin_bash/by') .' '. get_user_info($script['editor']) . qa_html(' (' . $editorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
     $s_view['score'] = qa_html($script['score']);
     $s_view['score_label'] = qa_lang_html_sub_split('main/x_votes', '')['suffix'];
     $s_view['exec_count'] = $script['exec_count'];
@@ -24,6 +32,9 @@ function generate_s_view_content($script) {
     return $s_view;
 }
 
+/*
+ * Configurates vote buttons.
+ */
 function set_vote_buttons(&$s_view, $scriptid, $authorid) {
     $userid = qa_get_logged_in_userid();
     if (!isset($userid)) {
@@ -60,6 +71,9 @@ function set_vote_buttons(&$s_view, $scriptid, $authorid) {
     }
 }
 
+/*
+ * Returns informations about selected user.
+ */
 function get_user_info($userid) {
     $handle = qa_userid_to_handle($userid);
     return qa_get_one_user_html($handle);

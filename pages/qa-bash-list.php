@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for list page.
+ */
+
 class qa_bash_list_page {
 
     function match_request($request) {

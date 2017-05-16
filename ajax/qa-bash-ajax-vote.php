@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for create page ajax calls
+ */
+
 class qa_bash_ajax_vote {
 
     function match_request($request) {
@@ -22,13 +27,18 @@ class qa_bash_ajax_vote {
         return null;
     }
 
+    /*
+     * Generates and prints response from server
+     */
     function get_response($score, $scriptid) {
         require_once __DIR__.'/../app/qa-bash-s-view.php';
 
+        // s-view inicialization
         set_vote_buttons($s_view, $scriptid, null);
         $s_view['score_label'] = qa_lang_html_sub_split('main/x_votes', '')['suffix'];
         $s_view['score'] = $score;
 
+        // load theme class
         $themeclass = qa_load_theme_class(qa_get_site_theme(), 'voting', null, null);
         $themeclass->initialize();
 

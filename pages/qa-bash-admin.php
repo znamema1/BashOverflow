@@ -1,9 +1,15 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for plugin administration.
+ */
+
+
 class qa_bash_admin_page {
 
     function match_request($request) {
-        return false;
+        return false; //page is not allowed to be requested
     }
 
     function process_request($request) {
@@ -15,9 +21,14 @@ class qa_bash_admin_page {
         return init_db_tables($table_list);
     }
 
+    /*
+     * Default options for BashOverflow.
+     */
     function option_default($option) {
         switch ($option) {
             case 'bashoverflow_server_url': return '127.0.0.1';
+            case 'bashoverflow_create_points': return 10;
+            case 'bashoverflow_edit_points': return 5;
             case 'bashoverflow_max_linked_scripts': return 5;
             case 'bashoverflow_script_name_min_len': return 5;
             case 'bashoverflow_script_name_max_len': return 40;
@@ -41,6 +52,9 @@ class qa_bash_admin_page {
         }
     }
 
+    /*
+     * Generates plugin administration form. Is also a controller for administration form.
+     */
     function admin_form(&$qa_content) {
         require_once QA_INCLUDE_DIR . 'qa-app-options.php';
 
@@ -48,6 +62,8 @@ class qa_bash_admin_page {
 
         if (qa_clicked('plugin_bash_overflow_save_button')) {
             $this->save_option('bashoverflow_server_url', false);
+            $this->save_option('bashoverflow_create_points');
+            $this->save_option('bashoverflow_edit_points');
             $this->save_option('bashoverflow_max_linked_scripts');
             $this->save_option('bashoverflow_script_name_min_len');
             $this->save_option('bashoverflow_script_name_max_len');
@@ -75,6 +91,8 @@ class qa_bash_admin_page {
             'style' => 'wide',
             'fields' => array(
                 $this->generate_field('bashoverflow_server_url', false, 'text'),
+                $this->generate_field('bashoverflow_create_points', false),
+                $this->generate_field('bashoverflow_edit_points', false),
                 $this->generate_field('bashoverflow_max_linked_scripts', false),
                 $this->generate_field('bashoverflow_script_name_min_len'),
                 $this->generate_field('bashoverflow_script_name_max_len'),
@@ -104,6 +122,9 @@ class qa_bash_admin_page {
         );
     }
 
+    /*
+     * Generates form field configuration.
+     */
     function generate_field($label, $suffix = true, $type = 'number') {
         return array(
             'label' => qa_lang_html('plugin_bash/' . $label),
@@ -114,6 +135,9 @@ class qa_bash_admin_page {
         );
     }
 
+    /*
+     * Saves option into db.
+     */
     function save_option($option, $number = true) {
         if ($number) {
             qa_opt($option, (int) qa_post_text($option));

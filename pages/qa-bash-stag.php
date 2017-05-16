@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for stag page.
+ */
+
 class qa_bash_stag_page {
 
     private $urltoroot;

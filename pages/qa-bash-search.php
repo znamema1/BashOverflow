@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for search page.
+ */
+
 class qa_bash_search_page {
 
     private $urltoroot;

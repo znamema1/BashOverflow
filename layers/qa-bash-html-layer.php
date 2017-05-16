@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Layer which extends standard themeclass html generation capabilities.
+ */
+
 class qa_html_theme_layer extends qa_html_theme_base {
 
     public function main_part($key, $part) {
@@ -12,6 +17,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         }
     }
 
+    /*
+      Script info on run and detail page.
+     */
     function s_view($s_view) {
         $this->output('<div class="qa-part-q-view">');
         $this->s_stats($s_view, 'qa-q-view');
@@ -20,6 +28,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div> <!-- END qa-s-view -->', '');
     }
 
+    /*
+      Script stats on all pages.
+     */
     function s_stats($s_view, $class) {
         $this->output('<div class="' . $class . '-stats">');
         $this->s_voting($s_view, $class);
@@ -27,6 +38,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div>');
     }
 
+    /*
+      Script voting feature and count.
+     */
     function s_voting($s_view, $class) {
         $this->output('<div class="qa-voting qa-voting-net">');
         $this->s_vote_buttons($s_view);
@@ -35,6 +49,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div>');
     }
 
+    /*
+      Script voting buttons.
+     */
     function s_vote_buttons($s_view) {
         $this->output('<div class="qa-vote-buttons qa-vote-buttons-net">');
         switch ($s_view['state']) {
@@ -63,6 +80,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div>');
     }
 
+    /*
+      Script score.
+     */
     function s_vote_count($s_view) {
         if ($s_view['score'] > 0) {
             $plus = '+';
@@ -76,12 +96,18 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div>');
     }
 
+    /*
+      Script execution count.
+     */
     function s_exec_count($s_view) {
         $this->output('<span class="qa-view-count">');
         $this->output('<span class="qa-view-count-data">' . number_format($s_view['exec_count']) . '</span><span class="qa-view-count-pad">' . $s_view['exec_label'] . '</span>');
         $this->output('</span>');
     }
 
+    /*
+      Script main part for script description, metainformations and stags.
+     */
     function s_view_main($s_view) {
         $this->output('<div class="qa-q-view-main">');
         $this->s_meta($s_view, 'qa-q-view');
@@ -90,6 +116,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div>');
     }
 
+    /*
+      Script metainformations - owner, editor and versions.
+     */
     function s_meta($s_view, $class) {
         $this->output('<span class="' . $class . '-avatar-meta">');
         $this->output('<span class="' . $class . '-meta">');
@@ -99,6 +128,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</span>');
     }
 
+    /*
+      Script metainformations - owner, editor.
+     */
     function s_meta_content($s_view, $class) {
         $this->output('<span class="' . $class . '-what">' . $s_view['what'] . '</span>');
         $this->output('<span class="' . $class . '-who">' . $s_view['who'] . '</span>');
@@ -110,6 +142,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         }
     }
 
+    /*
+      Script metainformations - versions.
+     */
     function s_meta_version($s_view) {
         if (isset($s_view['versions'])) {
             $this->output('<span style="float: right">');
@@ -130,6 +165,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         }
     }
 
+    /*
+      Script description.
+     */
     function s_view_content($s_view) {
         $this->output('<div class="qa-q-view-content">');
         $this->output('<div class="entry-content">');
@@ -138,6 +176,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div>');
     }
 
+    /*
+      Script stags.
+     */
     function s_post_tags($s_view, $class) {
         if (!empty($s_view['tags'])) {
             $post['q_tags'] = array();
@@ -148,6 +189,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         }
     }
 
+    /*
+      List of scripts.
+     */
     function s_list($s_list) {
         if (isset($s_list['title'])) {
             $this->part_title($s_list);
@@ -158,6 +202,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div> <!-- END qa-q-list -->', '');
     }
 
+    /*
+      Items in list of scripts.
+     */
     function s_list_items($s_list) {
         if (!empty($s_list['items'])) {
             foreach ($s_list['items'] as $s_item) {
@@ -166,6 +213,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         }
     }
 
+    /*
+      One item in list of scripts.
+     */
     function s_list_item($s_item) {
         $this->output('<div class="qa-q-list-item">');
 
@@ -176,6 +226,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div> <!-- END qa-q-list-item -->', '');
     }
 
+    /*
+      Script item main part for script name, metainformations and stags.
+     */
     function s_item_main($s_item) {
         $this->output('<div class="qa-q-item-main">');
         $this->q_item_title($s_item);
@@ -184,6 +237,9 @@ class qa_html_theme_layer extends qa_html_theme_base {
         $this->output('</div>');
     }
 
+    /*
+     * Generates html representaions of stag.
+     */
     function generate_stag_html($tag) {
         return '<a href="' . qa_path_html('stag/' . qa_html($tag)) . '"'
                 . ' class="qa-tag-link">'

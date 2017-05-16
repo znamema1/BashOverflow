@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for run page ajax calls, only files.
+ */
+
 class qa_bash_ajax_run_page_file {
 
     function match_request($request) {
@@ -18,19 +23,26 @@ class qa_bash_ajax_run_page_file {
         $result = run_script($scriptid, $versionid, $content);
 
         if (!isset($result) || !isset($result['status'])) {
-            $response = $this->get_error_response(qa_lang_html('plugin_bash/run_script_internal_error'));
+            $this->get_error_response(qa_lang_html('plugin_bash/run_script_internal_error'));
         } elseif ($result['status'] == 'OK') {
-            $response = $this->get_response($result['content']);
+            $this->get_response($result['content']);
         } else {
-            $response = $this->get_error_response($result['errorMessage']);
+            $this->get_error_response($result['errorMessage']);
         }
-        echo $response;
     }
 
+    /*
+     * Prints error response html
+     * err - Error message
+     */
     function get_error_response($err) {
         echo '<div class="qa-error">' . qa_html($err, true) . '</div>';
     }
 
+    /*
+     * Prints response html
+     * content - processed data
+     */
     function get_response(&$content) {
         $themeclass = qa_load_theme_class(qa_get_site_theme(), null, null, null);
         $themeclass->initialize();
@@ -38,6 +50,9 @@ class qa_bash_ajax_run_page_file {
         $themeclass->form($this->generate_array($content), 1);
     }
 
+    /*
+     * Generates form configuration
+     */
     function generate_array(&$content) {
         return array(
             'style' => 'tall',
@@ -48,7 +63,7 @@ class qa_bash_ajax_run_page_file {
                 ),
                 array(
                     'type' => 'custom',
-                    'label' => '<a id="outputdl" href="data:text/plain;charset=utf-8,' . @$content . '" type="text/plain" download="output.txt">'.qa_lang_html('plugin_bash/run_script_download_output').'</a>',
+                    'label' => '<a id="outputdl" href="data:text/plain;charset=utf-8,' . @$content . '" type="text/plain" download="output.txt">' . qa_lang_html('plugin_bash/run_script_download_output') . '</a>',
                 )
             )
         );

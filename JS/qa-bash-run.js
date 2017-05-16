@@ -1,11 +1,20 @@
 /* global qa_root, version_id, script_id, err_send, parseFloat, err_run, err_nodata, file_type, err_file_type_tit, max_file_sizele, er, max_file_size, err_file_size_titler_file_type_msg, err_file_type_msg, err_file_type_title, err_file_size_title, err_file_size_msg */
 
+/*
+ * Javascript for run function on run page.
+ * @author : Martin Znamenacek
+ * 
+ */
+
 const units = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
 const ANIM_DUR = 400;
 
 var fileValid = false;
 var running = false;
 
+/*
+ * Sends ajax request to the server to execute script on inserted text.
+ */
 function runText(waiting_elem) {
     $.ajax({
         url: qa_root + 'ajax_run_page_text',
@@ -25,6 +34,11 @@ function runText(waiting_elem) {
     return true;
 }
 
+/*
+ * Returns formated fileSize with proper units.
+ * @param fileSize to format
+ * @returns {String} fileSize with unit
+ */
 function getNiceSize(fileSize) {
     var i = 0;
 
@@ -36,6 +50,9 @@ function getNiceSize(fileSize) {
     return fileSize + ' ' + units[i] + 'B';
 }
 
+/*
+ * Sends ajax request to the server to execute script on uploaded file.
+ */
 function runFile(waiting_elem) {
     var file = $('#filein')[0].files[0]; //Files[0] = 1st file
     var reader = new FileReader();
@@ -73,7 +90,9 @@ function runFile(waiting_elem) {
     return true;
 }
 
-
+/*
+ * Handles user input and decides whether text or file will be processed.
+ */
 function handleInput(elem) {
     if (running) {
         alert(err_run);
@@ -99,6 +118,9 @@ function handleInput(elem) {
     }
 }
 
+/*
+ * shows server response html
+ */
 function showResult(result) {
     var $content = $(result);
     var $output = $('#output');
@@ -116,6 +138,8 @@ function prepareDone(waiting_elem) {
     };
 }
 
+
+// inicialization of page validations and run html code
 $(document).ready(function () {
     var $content = $('<div id="output" style="display: none" class="qa-part-form2"></div>');
     $content.hide();

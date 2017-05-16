@@ -1,7 +1,12 @@
-// global constants
-const ANIM_DUR = 400;
+/* global qa_root, max_script_count */
 
-// local constants
+/*
+ * Javascript for adding/removing fields on create page.
+ * @author : Martin Znamenacek
+ * 
+ */
+
+const ANIM_DUR = 400;
 const COUNTER_MIN = 2;
 const COUNTER_MAX = max_script_count;
 const BTN_DISABLE = "qa-btn-disabled";
@@ -14,15 +19,26 @@ function getCounter() {
 function setCounter(number) {
     $('#counter').attr('value', number);
 }
-
+/*
+ * Adds disable css class to the element.
+ * @param element to disable
+ */
 function disable(element) {
-	$(element).addClass(BTN_DISABLE);
+    $(element).addClass(BTN_DISABLE);
 }
 
+/*
+ * Remove disable css from the element
+ * @param element to enable
+ */
 function enable(element) {
-        $(element).removeClass(BTN_DISABLE);
+    $(element).removeClass(BTN_DISABLE);
 }
 
+/*
+ * Recieve html code representaion of the script fields.
+ * @param counter of the script fields to be generated
+ */
 function addContent(counter) {
     $.ajax({
         url: qa_root + 'ajax_create_page/' + counter,
@@ -49,6 +65,9 @@ function addContent(counter) {
     });
 }
 
+/*
+ * Funcion for adding script fields handling.
+ */
 function addScript() {
     var counter = getCounter();
     if (counter > COUNTER_MAX) {
@@ -60,6 +79,9 @@ function addScript() {
     addContent(counter);
 }
 
+/*
+ * Funcion for removing script fields handling.
+ */
 function removeScript() {
     var counter = getCounter();
     --counter;
@@ -78,10 +100,6 @@ function removeScript() {
         $toRemove = $toRemove.add($current);
         $current = $current.prev();
     }
-/*/
-    var $toRemove = $('.script-no' + counter);
-//*/
-
     $toRemove.hide(ANIM_DUR, function () {
         $toRemove.remove();
     });
@@ -91,11 +109,18 @@ function removeScript() {
     }
 }
 
+
+// inicialize buttons on page load
 $(document).ready(function () {
     if (getCounter() <= COUNTER_MIN) {
         disable("#btn-remove");
     } else {
         enable("#btn-remove");
+    }
+    if (getCounter() > COUNTER_MAX) {
+        disable("#btn-add");
+    } else {
+        enable("#btn-add");
     }
 });
 

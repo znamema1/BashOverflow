@@ -1,14 +1,28 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Functions for DB requests.
+ */
+
+/*
+ * Returns owner of the script.
+ */
 function db_get_script_owner($scriptid) {
     $result = qa_db_query_sub('SELECT userid FROM ^scripts WHERE scriptid = #', $scriptid);
     return qa_db_read_one_value($result, true);
 }
 
+/*
+ * Updates scripts accessibility.
+ */
 function db_update_script_access($scriptid, $acc) {
     qa_db_query_sub('UPDATE ^scripts SET accessibility = $ WHERE scriptid = #', $acc, $scriptid);
 }
 
+/*
+ * Creates a new script in the db.
+ */
 function db_create_script($userid) {
     qa_db_query_sub(
             'INSERT INTO ^scripts(userid, last_version, score, run_count, accessibility)'
@@ -17,6 +31,9 @@ function db_create_script($userid) {
     return qa_db_last_insert_id();
 }
 
+/*
+ * Creates a new version in the db.
+ */
 function db_create_version($userid, $scriptid, $script, $versionid = 1) {
     qa_db_query_sub(
             'INSERT INTO ^versions(versionid, scriptid, created, editorid, description, example, commitmsg, name)'
@@ -24,29 +41,44 @@ function db_create_version($userid, $scriptid, $script, $versionid = 1) {
     return $versionid;
 }
 
+/*
+ * Returns stagid searched by stag.
+ */
 function db_get_stagid_by_stag($stag) {
     $result = qa_db_query_sub('SELECT stagid FROM ^stags WHERE stag =$', $stag);
     return qa_db_read_one_value($result, true);
 }
 
+/*
+ * Creates a new stag in the db.
+ */
 function db_create_stag($stag) {
     qa_db_query_sub(
             'INSERT INTO ^stags(stag) VALUES ($)', $stag);
     return qa_db_last_insert_id();
 }
 
+/*
+ * Creates db relation between version and related stags
+ */
 function db_add_version_stag_relation($scriptid, $versionid, $stagid) {
     qa_db_query_sub(
             'INSERT INTO ^version_stags(versionid, scriptid, stagid)'
             . ' VALUES ($,$,$)', $versionid, $scriptid, $stagid);
 }
 
+/*
+ * Returns repoid searched by all informations about repo.
+ */
 function db_get_repoid_by_args($repo) {
     $result = qa_db_query_sub('SELECT repoid FROM ^repos WHERE git = $ AND file_path = $ AND comm = $ AND r_order = $;'
             , $repo['git'], $repo['file'], $repo['comm'], $repo['order']);
     return qa_db_read_one_value($result, true);
 }
 
+/*
+ * Creates a new repo in the db.
+ */
 function db_create_repo($repo) {
     qa_db_query_sub(
             'INSERT INTO ^repos(git, file_path, comm, r_order)'
@@ -55,39 +87,60 @@ function db_create_repo($repo) {
     return qa_db_last_insert_id();
 }
 
+/*
+ * Creates db relation between version and related repos
+ */
 function db_add_version_repo_relation($scriptid, $versionid, $repoid) {
     qa_db_query_sub(
             'INSERT INTO ^version_repos(scriptid, versionid, repoid) '
             . ' VALUES ($,$,$)', $scriptid, $versionid, $repoid);
 }
 
+/*
+ * Adds points to he user.
+ */
 function db_add_user_points($userid, $add_points) {
     qa_db_query_sub('UPDATE ^userpoints SET bonus = bonus + $ WHERE userid = $', $add_points, $userid);
 }
 
+/*
+ * Sets scripts new last versionid.
+ */
 function db_set_script_last_version($scriptid, $versionid) {
     qa_db_query_sub(
             'UPDATE ^scripts SET last_version = $ WHERE scriptid = $', $versionid, $scriptid);
 }
 
+/*
+ * Returns informations about script.
+ */
 function db_get_script($scriptid) {
     $result = qa_db_query_sub('SELECT scriptid, userid, last_version, score, run_count, accessibility  FROM'
             . '  ^scripts WHERE scriptid = $', $scriptid);
     return qa_db_read_one_assoc($result, true);
 }
 
+/*
+ * Returns verions informations.
+ */
 function db_get_version($scriptid, $versionid) {
     $result = qa_db_query_sub('SELECT name ,versionid, scriptid, UNIX_TIMESTAMP(created) AS created, editorid, description, example, commitmsg FROM'
             . ' ^versions WHERE scriptid =$ AND versionid = $', $scriptid, $versionid);
     return qa_db_read_one_assoc($result, true);
 }
 
+/*
+ * Returns informations baout selected version.
+ */
 function db_get_version_overview($scriptid, $versionid) {
     $result = qa_db_query_sub('SELECT name , UNIX_TIMESTAMP(created) AS created, editorid FROM'
             . ' ^versions WHERE scriptid =$ AND versionid = $', $scriptid, $versionid);
     return qa_db_read_one_assoc($result, true);
 }
 
+/*
+ * Returns stags related to the version of the script 
+ */
 function db_get_script_stags($scriptid, $versionid) {
     $result = qa_db_query_sub('SELECT stag FROM ^version_stags JOIN ^stags ON'
             . ' ^version_stags.stagid = ^stags.stagid WHERE'
@@ -95,6 +148,9 @@ function db_get_script_stags($scriptid, $versionid) {
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Returns repos related to the version of the script 
+ */
 function db_get_repos($scriptid, $versionid) {
     $result = qa_db_query_sub('SELECT git, file_path AS "file", comm, r_order AS "order" FROM'
             . ' ^version_repos JOIN ^repos ON ^version_repos.repoid = ^repos.repoid WHERE'
@@ -102,11 +158,17 @@ function db_get_repos($scriptid, $versionid) {
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Return count of all scripts in the database.
+ */
 function db_get_count_all_scripts() {
     $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM ^scripts');
     return qa_db_read_one_value($result);
 }
 
+/*
+ * Return count of users scripts.
+ */
 function db_get_count_all_my_scripts($userid) {
     $result = qa_db_query_sub('SELECT COUNT(scriptid) FROM ^scripts WHERE userid = #', $userid);
     return qa_db_read_one_value($result);
@@ -117,6 +179,9 @@ function db_get_stag_count() {
     return qa_db_read_one_value($result);
 }
 
+/*
+ * Returns all unique stags, and counts their duplicites. 
+ */
 function db_get_stags($start, $count) {
     $result = qa_db_query_sub('SELECT s.stag, T.count '
             . 'FROM ^stags s JOIN (SELECT X.stagid, COUNT(*) count FROM (Select v.stagid FROM ^scripts s JOIN ^version_stags v ON s.scriptid = v.scriptid AND s.last_version = v.versionid) AS X GROUP BY stagid) AS T ON s.stagid = T.stagid '
@@ -124,6 +189,9 @@ function db_get_stags($start, $count) {
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Returns scriptids and versionids searched by stag.
+ */
 function db_get_versionid_and_scriptid_by_stag($stag, $start, $count) {
     $result = qa_db_query_sub('SELECT X.versionid, X.scriptid FROM '
             . '^stags t JOIN (SELECT v.* FROM ^scripts s JOIN ^version_stags v ON s.scriptid = v.scriptid AND s.last_version = v.versionid) AS X ON t.stagid = X.stagid JOIN ^versions vr ON X.versionid = vr.versionid AND X.scriptid = vr.scriptid '
@@ -131,21 +199,33 @@ function db_get_versionid_and_scriptid_by_stag($stag, $start, $count) {
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Returns scripts sorted by sort field (votes, runs).
+ */
 function db_get_scripts_by_sort($sort, $start, $count) {
     $result = qa_db_query_sub('SELECT * FROM ^scripts ORDER BY ' . $sort . ' DESC LIMIT #,#', $start, $count);
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Returns all users scripts.
+ */
 function db_get_my_scripts($userid) {
     $result = qa_db_query_sub('SELECT * FROM ^scripts WHERE userid = #', $userid);
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Returns all scripts.
+ */
 function db_get_scripts() {
     $result = qa_db_query_sub('SELECT * FROM ^scripts;');
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Returns scripts searched by phrase
+ */
 function db_get_scripts_by_q($q, $start, $count) {
     $result = qa_db_query_sub('Select s.scriptid, v.versionid  FROM '
             . '^scripts s JOIN ^versions v ON s.scriptid = v.scriptid AND s.last_version = v.versionid '
@@ -155,17 +235,26 @@ function db_get_scripts_by_q($q, $start, $count) {
     return qa_db_read_all_assoc($result);
 }
 
+/*
+ * Gets user vote on selected script
+ */
 function db_get_user_vote($userid, $scriptid) {
     $result = qa_db_query_sub('SELECT vote FROM ^svotes '
             . 'WHERE userid = # AND scriptid = #', $userid, $scriptid);
     return qa_db_read_one_value($result, true);
 }
 
+/*
+ * Deletes vote.
+ */
 function db_remove_vote($userid, $scriptid) {
     qa_db_query_sub('DELETE FROM ^svotes '
             . 'WHERE userid = # AND scriptid = #', $userid, $scriptid);
 }
 
+/*
+ * Creates new vote.
+ */
 function db_create_vote($userid, $scriptid, $value) {
     qa_db_query_sub('INSERT INTO ^svotes(userid, scriptid, vote) '
             . 'VALUES (#,#,#)', $userid, $scriptid, $value);
@@ -177,10 +266,16 @@ function db_get_script_score($scriptid) {
     return qa_db_read_one_value($result);
 }
 
+/*
+ * Updates scripts score.
+ */
 function db_update_score($scriptid, $value) {
     qa_db_query_sub('UPDATE ^scripts SET score = score + # WHERE scriptid = #', $value, $scriptid);
 }
 
+/*
+ * Increment count od runs of the selected script.
+ */
 function db_update_run_count($scriptid) {
     qa_db_query_sub('UPDATE ^scripts SET run_count = run_count + 1 WHERE scriptid = #', $scriptid);
 }

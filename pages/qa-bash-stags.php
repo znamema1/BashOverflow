@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for stags page.
+ */
+
 class qa_bash_stags_page {
 
     private $urltoroot;
@@ -22,8 +27,6 @@ class qa_bash_stags_page {
         $tagcount = db_get_stag_count();
         $populartags = get_popular_stags($start, $pagesize);
 
-        $tagcount = db_get_stag_count();
-
         $qa_content = qa_content_prepare();
         $qa_content['title'] = qa_lang_html('plugin_bash/stags_title');
 
@@ -41,8 +44,9 @@ class qa_bash_stags_page {
                     'count' => number_format($count),
                 );
 
-                if (( ++$output) >= $pagesize)
+                if (( ++$output) >= $pagesize) {
                     break;
+                }
             }
         } else {
             $qa_content['title'] = qa_lang_html('plugin_bash/stags_title_no');
@@ -58,6 +62,9 @@ class qa_bash_stags_page {
         return $qa_content;
     }
 
+    /*
+     * Returns stags html representation
+     */
     function stag_html($tag) {
         return '<a href="' . qa_path_html('stag/' . $tag) . '" class="qa-tag-link ">' . qa_html($tag) . '</a>';
     }

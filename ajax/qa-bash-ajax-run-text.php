@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Author: Martin Znamenacek
+ * Description: Controller for run page ajax calls, only text.
+ */
+
 class qa_bash_ajax_run_page_text {
 
     function match_request($request) {
@@ -14,7 +19,7 @@ class qa_bash_ajax_run_page_text {
         $versionid = qa_post_text('versionid');
 
         $result = run_script($scriptid, $versionid, $datain);
-        
+
         if (!isset($result) || !isset($result['status'])) {
             $response = $this->get_error_response(qa_lang_html('plugin_bash/run_script_internal_error'));
         } elseif ($result['status'] == 'OK') {
@@ -25,10 +30,18 @@ class qa_bash_ajax_run_page_text {
         echo $response;
     }
 
+    /*
+     * Prints error response html
+     * err - Error message
+     */
     function get_error_response($err) {
         echo '<div class="qa-error">' . qa_html($err, true) . '</div>';
     }
 
+    /*
+     * Prints response html
+     * content - processed data
+     */
     function get_response(&$content) {
         $themeclass = qa_load_theme_class(qa_get_site_theme(), null, null, null);
         $themeclass->initialize();
@@ -36,6 +49,9 @@ class qa_bash_ajax_run_page_text {
         $themeclass->form($this->generate_array($content), 1);
     }
 
+    /*
+     * Generates form configuration
+     */
     function generate_array(&$content) {
         return array(
             'style' => 'tall',

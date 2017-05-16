@@ -1,13 +1,16 @@
 <?php
 
-if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-    header('Location: ../../');
-    exit;
-}
+/*
+ * Author: Martin Znamenacek
+ * Description: Core functions for scripts functionality.
+ */
 
 require_once __DIR__ . '/qa-bash-db.php';
 require_once QA_INCLUDE_DIR . 'qa-app-users.php';
 
+/*
+ * Creates a new script in the application.
+ */
 function create_script($script) {
     $userid = qa_get_logged_in_userid();
 
@@ -37,6 +40,9 @@ function create_script($script) {
     return $scriptid;
 }
 
+/*
+ * Creates a new version of script.
+ */
 function update_script($scriptid, $script) {
     $userid = qa_get_logged_in_userid();
     $data = db_get_script($scriptid);
@@ -72,6 +78,9 @@ function update_script($scriptid, $script) {
     return $scriptid;
 }
 
+/*
+ * Returns full informations about script.
+ */
 function get_script($scriptid, $ver = null) {
     $script = db_get_script($scriptid);
     if (!isset($script)) {
@@ -116,6 +125,9 @@ function get_script($scriptid, $ver = null) {
     return $ret;
 }
 
+/*
+ * Returns the popular stags
+ */
 function get_popular_stags($start, $count = null) {
     $result = db_get_stags($start, $count);
     foreach ($result as $value) {
@@ -124,6 +136,9 @@ function get_popular_stags($start, $count = null) {
     return $ret;
 }
 
+/*
+ * Returns scripts searched by stag
+ */
 function get_scripts_by_stag($stag, $start, $count = null) {
     $result = db_get_versionid_and_scriptid_by_stag($stag, $start, $count);
 
@@ -133,14 +148,24 @@ function get_scripts_by_stag($stag, $start, $count = null) {
     return @$ret;
 }
 
+
+/*
+ * Return count of all scripts in the database.
+ */
 function get_count_all_scripts() {
     return db_get_count_all_scripts();
 }
 
+/*
+ * Return count of users scripts.
+ */
 function get_count_all_my_scripts($userid) {
     return db_get_count_all_my_scripts($userid);
 }
 
+/*
+ * Returns scripts sorted by sort field (votes, runs).
+ */
 function get_scripts_by_sort($sort, $start, $count) {
     $result = db_get_scripts_by_sort($sort, $start, $count);
     foreach ($result as $script) {
@@ -149,6 +174,9 @@ function get_scripts_by_sort($sort, $start, $count) {
     return @$ret;
 }
 
+/*
+ * Returns scripts sorted by date.
+ */
 function get_scripts_by_date($is_mine, $start, $count) {
     $userid = qa_get_logged_in_userid();
     if ($is_mine) {
@@ -168,11 +196,12 @@ function get_scripts_by_date($is_mine, $start, $count) {
         $ret = array_reverse($ret);
         $ret = array_slice($ret, $start, $count);
     }
-
-
     return @$ret;
 }
 
+/*
+ * Returns basic informations about script for list page.
+ */
 function get_script_overview($scriptid, $versionid) {
     $script = db_get_script($scriptid);
     $data = db_get_version_overview($scriptid, $versionid);
@@ -196,16 +225,18 @@ function get_script_overview($scriptid, $versionid) {
     $ret['title'] = $data['name'];
     $ret['url'] = qa_path_html('script/' . $scriptid);
     $ret['tags'] = @$tags;
-    $ret['what'] = qa_html('owned');
-    $ret['when'] = '2 minutes ago';
+    $ret['what'] = qa_lang_html('plugin_bash/owned');
     $ret['created'] = $data['created'];
-    $ret['who'] = qa_html(' by ') . get_user_info_base($script['userid']) . qa_html(' (' . $authorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
-    $ret['what_2'] = qa_html('edited');
+    $ret['who'] = qa_lang_html('plugin_bash/by') .' '. get_user_info_base($script['userid']) . qa_html(' (' . $authorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
+    $ret['what_2'] = qa_lang_html('plugin_bash/edited');
     $ret['when_2'] = qa_when_to_html($data['created'], @$options['fulldatedays']);
-    $ret['who_2'] = qa_html('by ') . get_user_info_base($data['editorid']) . qa_html(' (' . $editorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
+    $ret['who_2'] = qa_lang_html('plugin_bash/by') .' '. get_user_info_base($data['editorid']) . qa_html(' (' . $editorinfo['points'] . ' ' . qa_lang_html_sub_split('main/x_points', '')['suffix'] . ')');
     return $ret;
 }
 
+/*
+ * Returns scripts searched by phrase
+ */
 function search_scripts($q, $start, $count) {
     $result = db_get_scripts_by_q($q, $start, $count);
 
@@ -215,11 +246,17 @@ function search_scripts($q, $start, $count) {
     return @$ret;
 }
 
+/*
+ * Return informations about user.
+ */
 function get_user_info_base($userid) {
     $handle = qa_userid_to_handle($userid);
     return qa_get_one_user_html($handle);
 }
 
+/*
+ * Run selected script and returns result.
+ */
 function run_script($scriptid, $versionid, $datain) {
     require_once __DIR__ . '/qa-bash-api-handler.php';
     $repos = db_get_repos($scriptid, $versionid);
@@ -237,6 +274,10 @@ function run_script($scriptid, $versionid, $datain) {
     return json_decode($response, true);
 }
 
+/*
+ * Create new vote.
+ * If vote already exists, delete it.
+ */
 function vote_script($userid, $scriptid, $vote) {
     require_once QA_INCLUDE_DIR . 'db/points.php';
     $old_vote = db_get_user_vote($userid, $scriptid);
@@ -256,6 +297,9 @@ function vote_script($userid, $scriptid, $vote) {
     return db_get_script_score($scriptid);
 }
 
+/*
+ * Gets user vote on selected script
+ */
 function get_user_vote($userid, $scriptid) {
     $vote = db_get_user_vote($userid, $scriptid);
     if (!isset($vote)) {
@@ -269,22 +313,31 @@ function get_user_vote($userid, $scriptid) {
     }
 }
 
+/*
+ * Adds points from script creating to the user
+ */
 function user_add_points_create($userid) {
-    $points = 10;
+    $points = qa_opt('bashoverflow_create_points');
     require_once QA_INCLUDE_DIR . 'db/points.php';
 
     db_add_user_points($userid, $points);
     qa_db_points_update_ifuser($userid, null);
 }
 
+/*
+ * Adds points from script editing to the user
+ */
 function user_add_points_edit($userid) {
-    $points = 5;
+    $points = qa_opt('bashoverflow_edit_points');
     require_once QA_INCLUDE_DIR . 'db/points.php';
 
     db_add_user_points($userid, $points);
     qa_db_points_update_ifuser($userid, null);
 }
 
+/*
+ * Marks script as private.
+ */
 function lock_script($scriptid, $userid) {
     $ownerid = db_get_script_owner($scriptid);
     if ($userid != $ownerid) {
@@ -294,6 +347,9 @@ function lock_script($scriptid, $userid) {
     }
 }
 
+/*
+ * Marks script as public.
+ */
 function unlock_script($scriptid, $userid) {
     $ownerid = db_get_script_owner($scriptid);
     if ($userid != $ownerid) {
@@ -303,6 +359,10 @@ function unlock_script($scriptid, $userid) {
     }
 }
 
+/*
+ * Validates user entered data. 
+ * In case of error, creates error message.
+ */
 function validate_script(&$script, $check_comm_msg) {
     $ret = true;
     $ret &= validate_script_name($script);
