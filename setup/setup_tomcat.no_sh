@@ -1,0 +1,23 @@
+# Defacto se jelo podle tohoto navodu:
+# https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04
+
+# Jedine zmeny:
+
+# 1) Krok 5: Nebylo treba nastavovat firewall, stejne chceme jen lokalne
+
+# 2) Nejede na portu 8080, nybrz na 8181, nebot 8080 uz zabral Jenkins
+#    Bylo potreba upravit .../conf/server.xml, tag <Connector>, atribut port.
+
+# 3) Zaroven jsem v tom samem souboru, stejne tagu pridal atribut address="127.0.0.1",
+#    aby ani stranky nebyly pristupne zvenci. Defaultne byly, ale bylo zakazane prihlaseni.
+
+# 4) Aby byla tomcat aplikace pristupna pro Docker containery,
+#    je potreba pridat druhy Connector s addresou interfacu host systemu pro docker.
+#    To je standardne 172.17.0.1.
+
+# 4) .../conf/context.xml uz nebylo potreba upravovat.
+#    Vzhledem k tomu, ze cele webove stranky byly povoleny pouze na localhostu,
+#    je pro nas nejake nastavovani jednotlivych stranek irelevantni.
+
+# Nakonec jen spustit prikaz na restart sluzby pro nacteni zmeni:
+sudo service tomcat restart
