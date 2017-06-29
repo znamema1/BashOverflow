@@ -48,8 +48,8 @@ class qa_html_theme_layer extends qa_html_theme_base {
      */
     function create_sub_navigation($qa_request) {
         $this->create_list_page_subnavigation($qa_request);
-        $this->create_tags_pages_subnavigation($qa_request);
         $this->create_tag_pages_subnavigation($qa_request);
+	$this->create_tags_pages_subnavigation($qa_request);
         $this->create_search_pages_subnavigation($qa_request);
     }
 

@@ -63,7 +63,7 @@ class qa_bash_ajax_run_page_file {
                 ),
                 array(
                     'type' => 'custom',
-                    'label' => '<a id="outputdl" href="data:text/plain;charset=utf-8,' . @$content . '" type="text/plain" download="output.txt">' . qa_lang_html('plugin_bash/run_script_download_output') . '</a>',
+                    'label' => '<a id="outputdl" href="data:text/plain;charset=utf-8,' . urlencode(@$content) . '" type="text/plain" download="output.txt">' . qa_lang_html('plugin_bash/run_script_download_output') . '</a>',
                 )
             )
         );
